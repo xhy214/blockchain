@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+mysql:
+  dsn: "root:password@tcp(127.0.0.1:3306)/copyright_db?charset=utf8mb4&parseTime=True&loc=Local"
+
+jwt:
+  secret: "replace_with_strong_secret_in_production"
+  expire_hours: 24
+
+fabric:
+  peer_endpoint: "localhost:7051"
+  gateway_peer: "peer0.org1.example.com"
+  channel: "mychannel"
+  chaincode: "copyright"
+  msp_id: "Org1MSP"
+  cert_path: "../network/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem" 
+  key_path: "../network/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
+  tls_cert: "../network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"

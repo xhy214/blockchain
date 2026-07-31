@@ -6,6 +6,10 @@ NETWORK_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$NETWORK_DIR"
 
+echo "=== 清理旧的证书和通道工件 ==="
+docker compose down -v --remove-orphans 2>/dev/null || true
+rm -rf crypto-config channel-artifacts
+
 echo "=== 1. 生成证书 ==="
 cryptogen generate --config=crypto-config.yaml --output=crypto-config
 

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 
 	"blockchain/backend/config"
 
@@ -42,10 +43,10 @@ func NewFabricClient(cfg *config.FabricConfig) (*FabricClient, error) {
 		id,
 		client.WithSign(sign),
 		client.WithClientConnection(conn),
-		client.WithEvaluateTimeout(0),
-		client.WithEndorseTimeout(0),
-		client.WithSubmitTimeout(0),
-		client.WithCommitStatusTimeout(0),
+		client.WithEvaluateTimeout(60 * time.Second),
+		client.WithEndorseTimeout(60 * time.Second),
+		client.WithSubmitTimeout(60 * time.Second),
+		client.WithCommitStatusTimeout(60 * time.Second),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("gateway connect: %w", err)

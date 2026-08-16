@@ -1,6 +1,6 @@
 # 音乐数字版权保护平台
 
-基于 Hyperledger Fabric 2.5 + Go + Gin 的区块链版权存证与授权系统。
+基于 Hyperledger Fabric 2.5 + Go + Gin 的音乐版权存证与授权系统。支持版权存证、授权发放与核验、版权转让、争议存证、PDF 存证证书下载。
 
 ## 技术栈
 
@@ -10,48 +10,69 @@
 | 链码 | Go + fabric-contract-api-go |
 | 后端 | Go 1.22+ + Gin |
 | 数据库 | MySQL 8 |
+| 前端 | Vue 3 + Vite + Element Plus |
 | 认证 | JWT (HS256) |
 
-## 环境要求
+## 部署环境
 
-- Docker + Docker Compose
-- Go 1.22+
-- MySQL 8
-- Fabric 二进制工具：`cryptogen`、`configtxgen`（[安装指引](https://hyperledger-fabric.readthedocs.io/en/release-2.5/prereqs.html)）
+本项目在 **WSL 2（Ubuntu 24.04）** 中运行，Fabric 网络跑在 Docker 容器内。已配置国内网络（Docker 镜像加速、Go 模块代理、npm 镜像），无需翻墙。
 
-## 启动步骤
+WSL 内已装好：Docker、Go 1.22、Node 18、MySQL 8、Fabric 工具链（`cryptogen` / `configtxgen` v2.5.16）。项目代码位于 WSL 内 `~/blockchain`。
 
-### 1. 启动 Fabric 网络
+## 启动步骤（在 WSL 内执行）
 
-```bash
-cd network/scripts
-bash bootstrap.sh   # 生成证书 → 启动容器 → 创建通道
-```
-
-### 2. 部署链码
+### 1. 进入 WSL，确认 Docker 已启动
 
 ```bash
-bash deploy.sh      # 打包 → 安装 → 审批 → 提交链码
+wsl
+sudo systemctl start docker    # 未自动启动时执行
 ```
 
-### 3. 初始化 MySQL
+### 2. 启动 Fabric 网络
 
 ```bash
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS copyright_db DEFAULT CHARSET utf8mb4;"
-# 后端启动时会自动建表
+cd ~/blockchain/network/scripts
+sudo bash bootstrap.sh    # 生成证书 → 启动容器 → 创建通道
 ```
 
-修改 `backend/config.yaml` 中的 MySQL DSN 以匹配你的数据库密码。
+> **注意**：bootstrap 会重新生成 crypto-config（root 所有）。后端启动前需授权：
+
+```bash
+sudo chown -R xhy:xhy ~/blockchain/network/crypto-config
+```
+
+### 3. 部署链码
+
+```bash
+cd ~/blockchain/network/scripts
+sudo bash deploy.sh       # 打包 → 安装 → 审批 → 提交链码
+```
 
 ### 4. 启动后端 API
 
 ```bash
-cd backend
-go mod tidy
-go run main.go
+cd ~/blockchain/backend
+GOPROXY=https://goproxy.cn,direct GOSUMDB=off go run main.go
 ```
 
-服务监听 `http://localhost:8080`。
+启动成功日志依次出现：`MySQL connected` → `Fabric Gateway connected` → `Server starting on :8080`。
+
+### 5. 启动前端
+
+```bash
+cd ~/blockchain/frontend
+npm install     # 首次需要
+npm run dev
+```
+
+浏览器访问 **http://localhost:5173**（vite 将 `/api` 代理到后端 8080）。
+
+## 停止 / 清理
+
+```bash
+cd ~/blockchain/network/scripts
+sudo bash teardown.sh    # 停止容器、删除链码镜像、清空证书与通道工件
+```
 
 ## API 接口一览
 
@@ -113,9 +134,11 @@ go run main.go
 | 3002 | 授权已过期或无效 |
 | 5001 | Fabric 网络错误 |
 
-## 停止 / 清理
+## 常见问题与修复记录
 
-```bash
-cd network/scripts
-bash teardown.sh
-```
+- **链码容器崩溃 `too_many_pings`**：Fabric 2.5 + Go 1.20+ 的 gRPC keepalive 兼容性问题。已修改链码 vendored shim（`fabric-chaincode-go/.../internal/config.go`）为 `PermitWithoutStream=false`、`Time=24h` 修复。**勿重跑 `go mod vendor` 覆盖**。
+- **后端查询超时 `DeadlineExceeded`**：`backend/service/fabric.go` 中 Gateway 四个超时已从 `0` 改为 `60 * time.Second`（`0` 会被当作立即超时）。
+- **空响应 `unexpected end of JSON input`**：链码查询函数已改为返回显式空数组 `[]`（非 `nil`）。
+- **`chaincode already installed`**：deploy.sh 的 install 步骤已加 `|| true` 幂等处理；全新网络 sequence 从 1 开始。
+- **首次查询较慢**：链码容器空闲约 5 分钟后被回收，首次查询需冷启动约 30 秒，属正常现象。
+- **国内网络**：Docker 镜像源配置在 `/etc/docker/daemon.json`；Go 用 `GOPROXY=https://goproxy.cn,direct GOSUMDB=off`；npm 用 `registry.npmmirror.com`。

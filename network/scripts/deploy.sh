@@ -12,7 +12,7 @@ docker exec cli peer lifecycle chaincode package copyright.tar.gz \
     --label copyright_1.0
 
 echo "=== 2. Org1 安装链码 ==="
-docker exec cli peer lifecycle chaincode install copyright.tar.gz
+docker exec cli peer lifecycle chaincode install copyright.tar.gz || true
 
 echo "=== 3. Org2 安装链码 ==="
 docker exec \
@@ -22,7 +22,7 @@ docker exec \
     -e CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/server.key \
     -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt \
     -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp \
-    cli peer lifecycle chaincode install copyright.tar.gz
+    cli peer lifecycle chaincode install copyright.tar.gz || true
 
 echo "=== 4. 获取 Package ID ==="
 PACKAGE_ID=$(docker exec cli peer lifecycle chaincode queryinstalled 2>&1 | grep "copyright_1.0" | awk -F'Package ID: ' '{print $2}' | awk -F', Label' '{print $1}')

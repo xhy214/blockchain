@@ -81,7 +81,7 @@ func (c *CopyrightContract) QueryWorksByOwner(ctx contractapi.TransactionContext
 	}
 	defer iter.Close()
 
-	var works []*MusicWork
+	works := []*MusicWork{}
 	for iter.HasNext() {
 		item, err := iter.Next()
 		if err != nil {
@@ -132,7 +132,7 @@ func (c *CopyrightContract) SearchWorks(ctx contractapi.TransactionContextInterf
 	}
 	defer iter.Close()
 
-	var works []*MusicWork
+	works := []*MusicWork{}
 	for iter.HasNext() {
 		item, err := iter.Next()
 		if err != nil {
@@ -332,7 +332,7 @@ func (c *CopyrightContract) queryLicensesByIndex(ctx contractapi.TransactionCont
 	}
 	defer iter.Close()
 
-	var licenses []*License
+	licenses := []*License{}
 	for iter.HasNext() {
 		item, err := iter.Next()
 		if err != nil {
@@ -428,7 +428,7 @@ func (c *CopyrightContract) QueryDisputesByWork(ctx contractapi.TransactionConte
 	}
 	defer iter.Close()
 
-	var disputes []*DisputeRecord
+	disputes := []*DisputeRecord{}
 	for iter.HasNext() {
 		item, err := iter.Next()
 		if err != nil {
@@ -467,7 +467,7 @@ func (c *CopyrightContract) GetHistory(ctx contractapi.TransactionContextInterfa
 	}
 	defer iter.Close()
 
-	var records []*HistoryRecord
+	records := []*HistoryRecord{}
 	for iter.HasNext() {
 		item, err := iter.Next()
 		if err != nil {

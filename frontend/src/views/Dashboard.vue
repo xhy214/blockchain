@@ -9,7 +9,7 @@
       <el-col :xs="12" :sm="12" :md="6">
         <div class="stat-card" @click="$router.push('/works')">
           <div class="stat-icon icon-1">
-            <el-icon :size="24"><Music /></el-icon>
+            <el-icon :size="24"><Folder /></el-icon>
           </div>
           <div class="stat-value">{{ stats.works }}</div>
           <div class="stat-label">我的作品</div>
@@ -48,7 +48,7 @@
       <el-col :xs="24" :md="16">
         <div class="card">
           <div class="card-title">
-            <el-icon><Music /></el-icon>
+            <el-icon><Files /></el-icon>
             最近存证的作品
           </div>
           <div v-loading="loadingWorks">
@@ -105,16 +105,20 @@
             使用提示
           </div>
           <el-timeline>
-            <el-timeline-item timestamp="步骤 1" type="primary">
+            <el-timeline-item type="primary">
+              <div class="step-label step-primary">步骤 1</div>
               上传音频文件进行版权存证，获取区块链上唯一存证编号
             </el-timeline-item>
-            <el-timeline-item timestamp="步骤 2" type="success">
+            <el-timeline-item type="success">
+              <div class="step-label step-success">步骤 2</div>
               向他人发放授权，设置授权类型、有效期和使用次数
             </el-timeline-item>
-            <el-timeline-item timestamp="步骤 3" type="warning">
+            <el-timeline-item type="warning">
+              <div class="step-label step-warning">步骤 3</div>
               播放前核验授权有效性，保障版权合规使用
             </el-timeline-item>
-            <el-timeline-item timestamp="步骤 4" type="info">
+            <el-timeline-item type="info">
+              <div class="step-label step-info">步骤 4</div>
               随时生成存证证书，作为版权归属的法律凭证
             </el-timeline-item>
           </el-timeline>
@@ -216,4 +220,15 @@ function formatTime(t) {
   color: var(--text-light);
   font-weight: 600;
 }
+
+.step-label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+.step-primary { color: #409eff; }
+.step-success { color: #67c23a; }
+.step-warning { color: #e6a23c; }
+.step-info    { color: #909399; }
 </style>

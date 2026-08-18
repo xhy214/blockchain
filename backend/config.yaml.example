@@ -1,0 +1,27 @@
+# 音乐版权保护平台 — 后端配置模板
+# 使用方法：把本文件复制为 config.yaml，然后按你的实际环境修改数据库密码、JWT 密钥等
+# 重要：config.yaml 已被 Git 忽略，不会被提交到仓库（避免泄露密码）
+
+server:
+  port: 8080
+
+mysql:
+  # 把 你的MySQL密码 改成 root 用户的真实密码
+  # 如果你用专用账号（推荐），把 root 换成该账号名、密码对应即可
+  dsn: "root:你的MySQL密码@tcp(127.0.0.1:3306)/copyright_db?charset=utf8mb4&parseTime=True&loc=Local"
+
+jwt:
+  # 生产环境请替换为长随机字符串，例如 openssl rand -base64 32
+  secret: "replace_with_strong_secret_in_production"
+  expire_hours: 24
+
+fabric:
+  peer_endpoint: "localhost:7051"
+  gateway_peer: "peer0.org1.example.com"
+  channel: "mychannel"
+  chaincode: "copyright"
+  msp_id: "Org1MSP"
+  # 下面三个路径相对于 backend/ 目录；bootstrap.sh 跑完后 chown 给当前用户避免权限问题
+  cert_path: "../network/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem"
+  key_path:  "../network/crypto-config/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/"
+  tls_cert:  "../network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt"

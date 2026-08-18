@@ -4,6 +4,79 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 NETWORK_DIR="$(dirname "$SCRIPT_DIR")"
 
+# ------------------------------------------------------------------
+# 自动定位 Fabric 工具链（cryptogen / configtxgen）
+# 兼容：普通用户 PATH、sudo 重置 PATH、fabric-samples 默认安装位置
+# ------------------------------------------------------------------
+find_fabric_bin() {
+    # —— WSL 兼容性：获取"非 sudo 时"真正登录用户的家目录
+    #    因为 sudo -E 下 $HOME 可能还是 root/的 /root，但 fabric-samples 往往装在普通用户 HOME 下
+    local real_home="$HOME"
+    if [ -n "$SUDO_USER" ] && [ "$SUDO_USER" != "root" ]; then
+        # 有 sudo 但 SUDO_USER 是普通用户 → 用 getent passwd 拿到他的 $HOME（ubuntu 兼容）
+        local uhome
+        uhome="$(getent passwd "$SUDO_USER" 2>/dev/null | cut -d: -f6 || true)"
+        if [ -d "$uhome" ]; then
+            real_home="$uhome"
+        else
+            # 兜底：/home/$SUDO_USER（WSL / Ubuntu 默认结构）
+            real_home="/home/$SUDO_USER"
+        fi
+    fi
+
+    # 候选列表：既包含当前用户家目录，也包含 WSL 下把 fabric-samples 放在 Windows /mnt/c/Users 上的常见路径
+    local candidates=(
+        "$real_home/hyperledger/fabric-samples/bin"
+        "$HOME/hyperledger/fabric-samples/bin"
+        # WSL 常见：同事可能把 fabric-samples 下载在 Windows 家目录，直接被 /mnt/c/Users 挂载
+        "/mnt/c/Users/$USER/hyperledger/fabric-samples/bin"
+        "/mnt/c/Users/$USER/fabric-samples/bin"
+        "/mnt/c/hyperledger/fabric-samples/bin"
+        # Linux 系统级目录
+        "/usr/local/bin"
+        "/usr/bin"
+        "/opt/fabric/bin"
+        "/opt/hyperledger-fabric/bin"
+    )
+    for d in "${candidates[@]}"; do
+        if [ -x "$d/cryptogen" ] && [ -x "$d/configtxgen" ]; then
+            echo "$d"
+            return 0
+        fi
+    done
+    # 最后兜底：用 which 查当前执行用户（即使用户已 export PATH）
+    local cg_path
+    cg_path="$(command -v cryptogen 2>/dev/null || true)"
+    if [ -n "$cg_path" ]; then
+        dirname "$cg_path"
+        return 0
+    fi
+    return 1
+}
+
+FABRIC_BIN="$(find_fabric_bin || true)"
+if [ -z "$FABRIC_BIN" ]; then
+    # —— 给 WSL 的更有用的错误提示（同事如果路径没放对，能直接看到他机器上当前有哪些 fabric-samples 候选） ——
+    echo "ERROR: 找不到 cryptogen / configtxgen。"
+    echo ""
+    echo "  Ubuntu / WSL 建议安装方式："
+    echo "    curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh"
+    echo "    bash install-fabric.sh binary"
+    echo "  这会把二进制装到: ./fabric-samples/bin"
+    echo ""
+    echo "  或者把已经下载的 fabric-samples/bin 目录放到以下任一位置（都识别得到）："
+    echo "    - ~/hyperledger/fabric-samples/bin          （推荐，当前用户家目录）"
+    echo "    - /mnt/c/Users/你的Windows用户名/hyperledger/fabric-samples/bin  （WSL 放在 Windows 盘上）"
+    echo "    - /usr/local/bin                           （系统级）"
+    echo ""
+    echo "  当前检测到的执行用户信息："
+    echo "    USER=$USER   SUDO_USER=${SUDO_USER:-<空>}   HOME=$HOME"
+    echo "    PATH=$PATH"
+    exit 1
+fi
+export PATH="$FABRIC_BIN:$PATH"
+echo "使用 Fabric 工具链: $FABRIC_BIN (cryptogen $(cryptogen version 2>/dev/null | head -1))"
+
 cd "$NETWORK_DIR"
 
 echo "=== 清理旧的证书和通道工件 ==="

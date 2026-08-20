@@ -1,107 +1,114 @@
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <div style="display:flex; align-items:center; gap:12px;">
+    <div class="page-inner">
+      <div class="page-header-bar">
         <el-button @click="$router.back()" :icon="ArrowLeft" circle plain />
-        <div>
-          <h1>哈希验真</h1>
-          <p>上传原始文件，验证其哈希与链上存证是否一致</p>
+        <div class="page-header-title">
+          <div class="header-icon">
+            <el-icon :size="24"><Lock /></el-icon>
+          </div>
+          哈希验真
+        </div>
+      </div>
+      <div class="page-header-desc">上传原始文件，验证其哈希与链上存证是否一致</div>
+
+      <div class="panel-row">
+        <div class="panel-main">
+          <div class="panel">
+            <div class="panel-body">
+              <el-form ref="formRef" :model="form" :rules="rules" size="large">
+                <el-form-item label="作品 ID" prop="workID">
+                  <el-input v-model="form.workID" placeholder="输入或粘贴作品 ID" />
+                  <div class="form-tip">提示：可在作品详情页查看作品 ID</div>
+                </el-form-item>
+
+                <el-form-item label="原始文件" prop="file">
+                  <el-upload
+                    :auto-upload="false"
+                    :on-change="handleFileChange"
+                    :show-file-list="false"
+                    :limit="1"
+                    accept="audio/*"
+                    class="upload-area"
+                  >
+                    <div v-if="!fileInfo" class="upload-placeholder">
+                      <el-icon :size="48" class="upload-icon"><UploadFilled /></el-icon>
+                      <p class="upload-text">选择原始音频文件</p>
+                      <p class="upload-hint">上传文件用于本地计算哈希，不会发送到服务器</p>
+                    </div>
+                    <div v-else class="upload-selected">
+                      <el-icon :size="32" color="#667eea"><Headset /></el-icon>
+                      <div class="file-info">
+                        <div class="file-name">{{ fileInfo.name }}</div>
+                        <div class="file-size">{{ formatFileSize(fileInfo.size) }}</div>
+                      </div>
+                      <el-button type="danger" size="small" text @click="clearFile">
+                        <el-icon><Delete /></el-icon>
+                      </el-button>
+                    </div>
+                  </el-upload>
+                  <div v-if="fileInfo && fileHash" class="hash-display">
+                    <el-icon><Lock /></el-icon>
+                    <span>本地 SHA-256：</span>
+                    <code>{{ fileHash }}</code>
+                  </div>
+                </el-form-item>
+
+                <el-form-item>
+                  <el-button class="btn-gradient" :loading="verifying" @click="handleVerify">
+                    <el-icon><Check /></el-icon>&nbsp;开始验真
+                  </el-button>
+                </el-form-item>
+              </el-form>
+
+              <div v-if="result" class="result-section" :class="{ 'result-match': result.match, 'result-mismatch': !result.match }">
+                <div class="result-icon">
+                  <el-icon :size="48" :color="result.match ? '#10b981' : '#ef4444'">
+                    <CircleCheck v-if="result.match" />
+                    <CircleClose v-else />
+                  </el-icon>
+                </div>
+                <div class="result-content">
+                  <h3>{{ result.match ? '✅ 文件哈希匹配 - 作品真实有效' : '❌ 文件哈希不匹配 - 文件可能被篡改' }}</h3>
+                  <div class="result-hashes">
+                    <div class="hash-row">
+                      <span class="hash-label">链上哈希：</span>
+                      <code>{{ result.onChainHash }}</code>
+                    </div>
+                    <div class="hash-row">
+                      <span class="hash-label">本地上传：</span>
+                      <code>{{ result.uploadedHash }}</code>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-side">
+          <div class="info-card">
+            <div class="info-card-title">
+              <div class="icon-badge icon-badge-1">
+                <el-icon :size="24"><InfoFilled /></el-icon>
+              </div>
+              验真说明
+            </div>
+            <ol class="tips-list">
+              <li>区块链上仅存储作品的 SHA-256 哈希值，不存储文件本身</li>
+              <li>将原始文件上传到此处，系统会在本地重新计算哈希</li>
+              <li>若两次哈希完全一致，证明文件未被篡改</li>
+              <li>任何微小修改（哪怕是一个字节）都会导致哈希变化</li>
+            </ol>
+            <el-alert type="warning" :closable="false" show-icon style="margin-top: 16px;">
+              <template #title>
+                请使用存证时上传的原始文件进行验真，任何编辑、转码都将导致哈希不匹配。
+              </template>
+            </el-alert>
+          </div>
         </div>
       </div>
     </div>
-
-    <el-row :gutter="24">
-      <el-col :xs="24" :lg="16">
-        <div class="card">
-          <el-form ref="formRef" :model="form" :rules="rules" size="large">
-            <el-form-item label="作品 ID" prop="workID">
-              <el-input v-model="form.workID" placeholder="输入或粘贴作品 ID" />
-              <div class="form-tip">提示：可在作品详情页查看作品 ID</div>
-            </el-form-item>
-
-            <el-form-item label="原始文件" prop="file">
-              <el-upload
-                :auto-upload="false"
-                :on-change="handleFileChange"
-                :show-file-list="false"
-                :limit="1"
-                accept="audio/*"
-                class="upload-area"
-              >
-                <div v-if="!fileInfo" class="upload-placeholder">
-                  <el-icon :size="48" class="upload-icon"><UploadFilled /></el-icon>
-                  <p class="upload-text">选择原始音频文件</p>
-                  <p class="upload-hint">上传文件用于本地计算哈希，不会发送到服务器</p>
-                </div>
-                <div v-else class="upload-selected">
-                  <el-icon :size="32" color="#667eea"><Headset /></el-icon>
-                  <div class="file-info">
-                    <div class="file-name">{{ fileInfo.name }}</div>
-                    <div class="file-size">{{ formatFileSize(fileInfo.size) }}</div>
-                  </div>
-                  <el-button type="danger" size="small" text @click="clearFile">
-                    <el-icon><Delete /></el-icon>
-                  </el-button>
-                </div>
-              </el-upload>
-              <div v-if="fileInfo && fileHash" class="hash-display">
-                <el-icon><Lock /></el-icon>
-                <span>本地 SHA-256：</span>
-                <code>{{ fileHash }}</code>
-              </div>
-            </el-form-item>
-
-            <el-form-item>
-              <el-button type="primary" :loading="verifying" @click="handleVerify">
-                <el-icon><Check /></el-icon>&nbsp;开始验真
-              </el-button>
-            </el-form-item>
-          </el-form>
-
-          <div v-if="result" class="result-section" :class="{ 'result-match': result.match, 'result-mismatch': !result.match }">
-            <div class="result-icon">
-              <el-icon :size="48" :color="result.match ? '#10b981' : '#ef4444'">
-                <CircleCheck v-if="result.match" />
-                <CircleClose v-else />
-              </el-icon>
-            </div>
-            <div class="result-content">
-              <h3>{{ result.match ? '✅ 文件哈希匹配 - 作品真实有效' : '❌ 文件哈希不匹配 - 文件可能被篡改' }}</h3>
-              <div class="result-hashes">
-                <div class="hash-row">
-                  <span class="hash-label">链上哈希：</span>
-                  <code>{{ result.onChainHash }}</code>
-                </div>
-                <div class="hash-row">
-                  <span class="hash-label">本地上传：</span>
-                  <code>{{ result.uploadedHash }}</code>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="24" :lg="8">
-        <div class="card">
-          <div class="card-title">
-            <el-icon><InfoFilled /></el-icon>
-            验真说明
-          </div>
-          <ol class="tips-list">
-            <li>区块链上仅存储作品的 SHA-256 哈希值，不存储文件本身</li>
-            <li>将原始文件上传到此处，系统会在本地重新计算哈希</li>
-            <li>若两次哈希完全一致，证明文件未被篡改</li>
-            <li>任何微小修改（哪怕是一个字节）都会导致哈希变化</li>
-          </ol>
-          <el-alert type="warning" :closable="false" show-icon style="margin-top: 16px;">
-            <template #title>
-              请使用存证时上传的原始文件进行验真，任何编辑、转码都将导致哈希不匹配。
-            </template>
-          </el-alert>
-        </div>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
@@ -188,13 +195,16 @@ function formatFileSize(bytes) {
 
 .upload-placeholder {
   border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 40px;
+  border-radius: 20px;
+  padding: 48px;
   text-align: center;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.2s;
 
-  &:hover { border-color: var(--primary); }
+  &:hover {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(118,75,162,0.06) 100%);
+  }
 
   .upload-icon { color: var(--primary); margin-bottom: 12px; }
   .upload-text { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
@@ -204,10 +214,10 @@ function formatFileSize(bytes) {
 .upload-selected {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--bg-gradient-light);
-  border-radius: 12px;
-  padding: 16px;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);
+  border-radius: 20px;
+  padding: 20px;
   border: 1px solid var(--border);
 }
 
@@ -216,22 +226,24 @@ function formatFileSize(bytes) {
 .file-size { font-size: 12px; color: var(--text-secondary); }
 
 .hash-display {
-  margin-top: 12px;
-  padding: 10px 12px;
+  margin-top: 14px;
+  padding: 12px 16px;
   background: #f1f5f9;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 12px;
+  color: #475569;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   word-break: break-all;
-  code { font-family: monospace; color: var(--primary); }
+
+  code { font-family: monospace; color: #667eea; }
 }
 
 .result-section {
   margin-top: 24px;
   padding: 24px;
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   gap: 16px;
   align-items: flex-start;

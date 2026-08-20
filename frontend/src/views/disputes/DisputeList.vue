@@ -1,44 +1,56 @@
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <h1>争议记录</h1>
-      <p>查看所有已提交的版权争议存证</p>
-    </div>
-
-    <div class="card" v-loading="loading">
-      <div v-if="disputes.length" class="dispute-list">
-        <el-timeline>
-          <el-timeline-item
-            v-for="d in disputes"
-            :key="d.disputeID"
-            :timestamp="formatTime(d.filedAt)"
-            :type="d.status === 'PENDING' ? 'warning' : 'success'"
-            placement="top"
-          >
-            <div class="dispute-card">
-              <div class="dispute-header">
-                <el-tag :type="d.status === 'PENDING' ? 'warning' : 'success'">
-                  {{ d.status === 'PENDING' ? '处理中' : '已解决' }}
-                </el-tag>
-                <span class="dispute-id">
-                  <code>{{ d.disputeID }}</code>
-                </span>
-              </div>
-              <el-descriptions :column="2" border size="small" style="margin-top: 12px;">
-                <el-descriptions-item label="作品 ID" :span="2">
-                  <code>{{ d.workID }}</code>
-                </el-descriptions-item>
-                <el-descriptions-item label="申请人">{{ d.claimantID }}</el-descriptions-item>
-                <el-descriptions-item label="状态">{{ d.status }}</el-descriptions-item>
-                <el-descriptions-item label="证据说明" :span="2">
-                  <p style="line-height: 1.6;">{{ d.evidence }}</p>
-                </el-descriptions-item>
-              </el-descriptions>
-            </div>
-          </el-timeline-item>
-        </el-timeline>
+    <div class="page-inner">
+      <div class="page-header-bar">
+        <div class="page-header-title">
+          <div class="header-icon">
+            <el-icon :size="24"><Warning /></el-icon>
+          </div>
+          争议记录
+        </div>
       </div>
-      <el-empty v-else description="暂无争议记录" />
+      <div class="page-header-desc">查看所有已提交的版权争议存证</div>
+
+      <div class="panel" v-loading="loading">
+        <div class="panel-body">
+          <div v-if="disputes.length" class="dispute-list">
+            <el-timeline>
+              <el-timeline-item
+                v-for="d in disputes"
+                :key="d.disputeID"
+                :timestamp="formatTime(d.filedAt)"
+                :type="d.status === 'PENDING' ? 'warning' : 'success'"
+                placement="top"
+              >
+                <div class="dispute-card">
+                  <div class="dispute-header">
+                    <el-tag :type="d.status === 'PENDING' ? 'warning' : 'success'">
+                      {{ d.status === 'PENDING' ? '处理中' : '已解决' }}
+                    </el-tag>
+                    <span class="dispute-id">
+                      <code>{{ d.disputeID }}</code>
+                    </span>
+                  </div>
+                  <el-descriptions :column="2" border size="small" style="margin-top: 12px;">
+                    <el-descriptions-item label="作品 ID" :span="2">
+                      <code>{{ d.workID }}</code>
+                    </el-descriptions-item>
+                    <el-descriptions-item label="申请人">{{ d.claimantID }}</el-descriptions-item>
+                    <el-descriptions-item label="状态">{{ d.status }}</el-descriptions-item>
+                    <el-descriptions-item label="证据说明" :span="2">
+                      <p style="line-height: 1.6;">{{ d.evidence }}</p>
+                    </el-descriptions-item>
+                  </el-descriptions>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+          <div v-else class="empty-state">
+            <el-icon :size="48"><Document /></el-icon>
+            <p>暂无争议记录</p>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +65,6 @@ const disputes = ref([])
 onMounted(async () => {
   loading.value = true
   try {
-    // fetch disputes for each of my works
     const worksRes = await api.get('/copyright/my/list')
     const works = worksRes.data || []
     const allDisputes = []
@@ -82,7 +93,7 @@ function formatTime(t) {
 .dispute-card {
   background: #fff;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 16px;
   padding: 16px;
 }
 

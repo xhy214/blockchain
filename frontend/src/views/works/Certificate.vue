@@ -1,86 +1,93 @@
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <div style="display:flex; align-items:center; gap:12px;">
+    <div class="page-inner">
+      <div class="page-header-bar">
         <el-button @click="$router.back()" :icon="ArrowLeft" circle plain />
-        <div>
-          <h1>存证证书</h1>
-          <p>下载区块链版权存证证书 PDF，作为版权归属的法律凭证</p>
+        <div class="page-header-title">
+          <div class="header-icon">
+            <el-icon :size="24"><Medal /></el-icon>
+          </div>
+          存证证书
+        </div>
+      </div>
+      <div class="page-header-desc">下载区块链版权存证证书 PDF，作为版权归属的法律凭证</div>
+
+      <div class="panel-row">
+        <div class="panel-main">
+          <div class="panel" v-loading="loading">
+            <div class="panel-body">
+              <div class="certificate-preview">
+                <div class="cert-header">
+                  <div class="cert-logo">
+                    <el-icon :size="32"><Headset /></el-icon>
+                  </div>
+                  <h2>音乐数字版权存证证书</h2>
+                  <p class="cert-subtitle">本证书由区块链网络自动生成，具有不可篡改性</p>
+                </div>
+
+                <el-divider />
+
+                <el-descriptions :column="2" border size="large">
+                  <el-descriptions-item label="作品名称" :span="2">
+                    <strong>{{ work?.title || '-' }}</strong>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="艺术家" :span="2">{{ work?.artist || '-' }}</el-descriptions-item>
+                  <el-descriptions-item label="版权人">{{ work?.ownerID || '-' }}</el-descriptions-item>
+                  <el-descriptions-item label="作品类型">{{ work?.genre || '-' }}</el-descriptions-item>
+                  <el-descriptions-item label="存证时间" :span="2">{{ formatTime(work?.registerAt) }}</el-descriptions-item>
+                  <el-descriptions-item label="交易 ID" :span="2">
+                    <code class="cert-hash">{{ work?.txID || '-' }}</code>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="文件 SHA-256" :span="2">
+                    <code class="cert-hash">{{ work?.fileHash || '-' }}</code>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="作品 ID" :span="2">
+                    <code>{{ work?.workID || '-' }}</code>
+                  </el-descriptions-item>
+                </el-descriptions>
+
+                <div class="cert-footer">
+                  <div class="cert-stamp">
+                    <div class="stamp-ring"></div>
+                    <span>区块链存证</span>
+                  </div>
+                  <p class="cert-notice">
+                    本证书所记载的版权信息已记录于 Hyperledger Fabric 区块链，<br/>
+                    可通过作品 ID 在区块链网络中验证其真实性。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-side">
+          <div class="info-card" style="text-align: center;">
+            <el-button class="btn-gradient" size="large" :loading="downloading" @click="handleDownload" style="width: 100%; height: 48px; font-size: 16px;">
+              <el-icon :size="20"><Download /></el-icon>&nbsp;下载 PDF 证书
+            </el-button>
+            <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
+              证书包含完整的链上存证信息，可作为版权证明材料
+            </p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-title">
+              <div class="icon-badge icon-badge-3">
+                <el-icon :size="24"><InfoFilled /></el-icon>
+              </div>
+              证书说明
+            </div>
+            <ol class="cert-tips">
+              <li>PDF 证书由系统自动生成，包含区块链存证编号</li>
+              <li>证书可作为版权归属的初步法律凭证</li>
+              <li>任何人可通过作品 ID 在本系统验证证书真伪</li>
+              <li>建议妥善保管证书文件，用于侵权维权时的举证</li>
+            </ol>
+          </div>
         </div>
       </div>
     </div>
-
-    <el-row :gutter="24">
-      <el-col :xs="24" :lg="16">
-        <div class="card certificate-card" v-loading="loading">
-          <div class="certificate-preview">
-            <div class="cert-header">
-              <div class="cert-logo">
-                <el-icon :size="32"><Headset /></el-icon>
-              </div>
-              <h2>音乐数字版权存证证书</h2>
-              <p class="cert-subtitle">本证书由区块链网络自动生成，具有不可篡改性</p>
-            </div>
-
-            <el-divider />
-
-            <el-descriptions :column="2" border size="large">
-              <el-descriptions-item label="作品名称" :span="2">
-                <strong>{{ work?.title || '-' }}</strong>
-              </el-descriptions-item>
-              <el-descriptions-item label="艺术家" :span="2">{{ work?.artist || '-' }}</el-descriptions-item>
-              <el-descriptions-item label="版权人">{{ work?.ownerID || '-' }}</el-descriptions-item>
-              <el-descriptions-item label="作品类型">{{ work?.genre || '-' }}</el-descriptions-item>
-              <el-descriptions-item label="存证时间" :span="2">{{ formatTime(work?.registerAt) }}</el-descriptions-item>
-              <el-descriptions-item label="交易 ID" :span="2">
-                <code class="cert-hash">{{ work?.txID || '-' }}</code>
-              </el-descriptions-item>
-              <el-descriptions-item label="文件 SHA-256" :span="2">
-                <code class="cert-hash">{{ work?.fileHash || '-' }}</code>
-              </el-descriptions-item>
-              <el-descriptions-item label="作品 ID" :span="2">
-                <code>{{ work?.workID || '-' }}</code>
-              </el-descriptions-item>
-            </el-descriptions>
-
-            <div class="cert-footer">
-              <div class="cert-stamp">
-                <div class="stamp-ring"></div>
-                <span>区块链存证</span>
-              </div>
-              <p class="cert-notice">
-                本证书所记载的版权信息已记录于 Hyperledger Fabric 区块链，<br/>
-                可通过作品 ID 在区块链网络中验证其真实性。
-              </p>
-            </div>
-          </div>
-        </div>
-      </el-col>
-
-      <el-col :xs="24" :lg="8">
-        <div class="card" style="text-align: center;">
-          <el-button type="primary" size="large" class="download-btn" :loading="downloading" @click="handleDownload">
-            <el-icon :size="20"><Download /></el-icon>&nbsp;下载 PDF 证书
-          </el-button>
-          <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
-            证书包含完整的链上存证信息，可作为版权证明材料
-          </p>
-        </div>
-
-        <div class="card" style="margin-top: 20px;">
-          <div class="card-title">
-            <el-icon><InfoFilled /></el-icon>
-            证书说明
-          </div>
-          <ol class="cert-tips">
-            <li>PDF 证书由系统自动生成，包含区块链存证编号</li>
-            <li>证书可作为版权归属的初步法律凭证</li>
-            <li>任何人可通过作品 ID 在本系统验证证书真伪</li>
-            <li>建议妥善保管证书文件，用于侵权维权时的举证</li>
-          </ol>
-        </div>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
@@ -128,11 +135,10 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
 </script>
 
 <style lang="scss" scoped>
-.certificate-card { padding: 0; overflow: hidden; }
-
 .certificate-preview {
   padding: 32px;
   background: linear-gradient(180deg, #fefce8 0%, #fff 30%);
+  border-radius: 16px;
 }
 
 .cert-header { text-align: center; margin-bottom: 16px; }
@@ -158,7 +164,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   color: var(--text-primary);
   background: #f8fafc;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .cert-footer {
@@ -201,14 +207,6 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   font-size: 12px;
   color: var(--text-secondary);
   line-height: 1.8;
-}
-
-.download-btn {
-  width: 100%;
-  height: 48px;
-  font-size: 16px;
-  background: var(--bg-gradient) !important;
-  border: none !important;
 }
 
 .cert-tips { padding-left: 20px; line-height: 1.8; font-size: 14px; color: var(--text-secondary); }

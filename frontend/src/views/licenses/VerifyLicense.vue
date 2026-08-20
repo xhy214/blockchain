@@ -1,103 +1,116 @@
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <h1>授权核验</h1>
-      <p>模拟流媒体播放前的版权核验场景，验证用户对特定作品是否持有有效授权</p>
+    <div class="page-inner">
+      <div class="page-header-bar">
+        <div class="page-header-title">
+          <span class="header-icon"><el-icon :size="24"><CircleCheck /></el-icon></span>
+          授权核验
+        </div>
+      </div>
+      <div class="page-header-desc">模拟流媒体播放前的版权核验场景，验证用户对特定作品是否持有有效授权</div>
+
+      <div class="panel-row">
+        <div class="panel-main">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">
+                <el-icon :size="22"><Search /></el-icon>
+                核验查询
+              </div>
+            </div>
+            <div class="panel-body">
+              <el-form ref="formRef" :model="form" :rules="rules" size="large" inline>
+                <el-form-item label="作品 ID" prop="workID">
+                  <el-input v-model="form.workID" placeholder="输入作品 ID" style="width: 300px;" />
+                </el-form-item>
+                <el-form-item label="用户 ID" prop="licenseeID">
+                  <el-input v-model="form.licenseeID" placeholder="输入被核验用户 ID" style="width: 240px;" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" class="btn-gradient" :loading="verifying" @click="handleVerify">
+                    <el-icon><CircleCheck /></el-icon>&nbsp;核验
+                  </el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+
+          <div v-if="result" class="panel result-panel">
+            <div class="result-header" :class="{ valid: result.valid, invalid: !result.valid }">
+              <el-icon :size="40">
+                <CircleCheck v-if="result.valid" />
+                <CircleClose v-else />
+              </el-icon>
+              <h3>{{ result.valid ? '授权有效' : '授权无效' }}</h3>
+              <p v-if="!result.valid" class="reason">{{ result.reason }}</p>
+            </div>
+
+            <template v-if="result.valid && result.license">
+              <div class="panel-body">
+                <el-descriptions :column="2" border>
+                  <el-descriptions-item label="授权类型">{{ result.license.licenseType }}</el-descriptions-item>
+                  <el-descriptions-item label="授权 ID">
+                    <code>{{ result.license.licenseID }}</code>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="有效期">{{ formatDate(result.license.startDate) }} ~ {{ formatDate(result.license.endDate) }}</el-descriptions-item>
+                  <el-descriptions-item label="使用次数">
+                    {{ result.license.usedCount }} / {{ result.license.maxUsage || '不限次' }}
+                  </el-descriptions-item>
+                </el-descriptions>
+                <el-button
+                  type="success"
+                  style="margin-top: 16px;"
+                  :loading="recording"
+                  @click="handleRecordUsage"
+                >
+                  <el-icon><VideoPlay /></el-icon>&nbsp;模拟播放（记录一次使用）
+                </el-button>
+              </div>
+            </template>
+
+            <template v-if="!result.valid && result.license">
+              <div class="panel-body">
+                <el-descriptions :column="2" border>
+                  <el-descriptions-item label="授权状态">
+                    {{ result.license.status === 'ACTIVE' ? '有效' : '已撤销/过期' }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="有效期">{{ formatDate(result.license.startDate) }} ~ {{ formatDate(result.license.endDate) }}</el-descriptions-item>
+                  <el-descriptions-item label="使用次数" :span="2">
+                    {{ result.license.usedCount }} / {{ result.license.maxUsage || '不限次' }}
+                  </el-descriptions-item>
+                </el-descriptions>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="panel-side">
+          <div class="info-card">
+            <div class="info-card-title">
+              <span class="icon-badge icon-badge-3"><el-icon :size="24"><InfoFilled /></el-icon></span>
+              核验逻辑
+            </div>
+            <el-steps direction="vertical" :active="0" class="steps">
+              <el-step title="查找授权" description="查找该用户对该作品的所有授权" />
+              <el-step title="检查状态" description="授权是否为 ACTIVE 状态" />
+              <el-step title="检查时效" description="当前时间是否在有效期内" />
+              <el-step title="检查次数" description="使用次数是否未超过上限" />
+              <el-step title="返回结果" description="全部通过 → 授权有效" />
+            </el-steps>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-title">
+              <span class="icon-badge icon-badge-1"><el-icon :size="24"><LightBulb /></el-icon></span>
+              场景示例
+            </div>
+            <p class="example-text">
+              音乐平台在用户点击播放按钮时，调用此接口核验该用户是否对目标歌曲持有有效授权。这是版权合规播放的核心环节，确保每一次播放都有合法授权依据。
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <el-row :gutter="24">
-      <el-col :xs="24" :lg="16">
-        <div class="card">
-          <el-form ref="formRef" :model="form" :rules="rules" size="large" inline>
-            <el-form-item label="作品 ID" prop="workID">
-              <el-input v-model="form.workID" placeholder="输入作品 ID" style="width: 300px;" />
-            </el-form-item>
-            <el-form-item label="用户 ID" prop="licenseeID">
-              <el-input v-model="form.licenseeID" placeholder="输入被核验用户 ID" style="width: 240px;" />
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :loading="verifying" @click="handleVerify">
-                <el-icon><CircleCheck /></el-icon>&nbsp;核验
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-
-        <div v-if="result" class="result-card" style="margin-top: 20px;">
-          <div class="result-header" :class="{ valid: result.valid, invalid: !result.valid }">
-            <el-icon :size="40">
-              <CircleCheck v-if="result.valid" />
-              <CircleClose v-else />
-            </el-icon>
-            <h3>{{ result.valid ? '✅ 授权有效' : '❌ 授权无效' }}</h3>
-            <p v-if="!result.valid" class="reason">{{ result.reason }}</p>
-          </div>
-
-          <template v-if="result.valid && result.license">
-            <div class="result-detail">
-              <el-descriptions :column="2" border>
-                <el-descriptions-item label="授权类型">{{ result.license.licenseType }}</el-descriptions-item>
-                <el-descriptions-item label="授权 ID">
-                  <code>{{ result.license.licenseID }}</code>
-                </el-descriptions-item>
-                <el-descriptions-item label="有效期">{{ formatDate(result.license.startDate) }} ~ {{ formatDate(result.license.endDate) }}</el-descriptions-item>
-                <el-descriptions-item label="使用次数">
-                  {{ result.license.usedCount }} / {{ result.license.maxUsage || '不限次' }}
-                </el-descriptions-item>
-              </el-descriptions>
-              <el-button
-                type="success"
-                style="margin-top: 16px;"
-                :loading="recording"
-                @click="handleRecordUsage"
-              >
-                <el-icon><VideoPlay /></el-icon>&nbsp;模拟播放（记录一次使用）
-              </el-button>
-            </div>
-          </template>
-
-          <template v-if="!result.valid && result.license">
-            <div class="result-detail">
-              <el-descriptions :column="2" border>
-                <el-descriptions-item label="授权状态">
-                  {{ result.license.status === 'ACTIVE' ? '有效' : '已撤销/过期' }}
-                </el-descriptions-item>
-                <el-descriptions-item label="有效期">{{ formatDate(result.license.startDate) }} ~ {{ formatDate(result.license.endDate) }}</el-descriptions-item>
-                <el-descriptions-item label="使用次数" :span="2">
-                  {{ result.license.usedCount }} / {{ result.license.maxUsage || '不限次' }}
-                </el-descriptions-item>
-              </el-descriptions>
-            </div>
-          </template>
-        </div>
-      </el-col>
-
-      <el-col :xs="24" :lg="8">
-        <div class="card">
-          <div class="card-title">
-            <el-icon><InfoFilled /></el-icon>
-            核验逻辑
-          </div>
-          <el-steps direction="vertical" :active="0" class="steps">
-            <el-step title="查找授权" description="查找该用户对该作品的所有授权" />
-            <el-step title="检查状态" description="授权是否为 ACTIVE 状态" />
-            <el-step title="检查时效" description="当前时间是否在有效期内" />
-            <el-step title="检查次数" description="使用次数是否未超过上限" />
-            <el-step title="返回结果" description="全部通过 → 授权有效" />
-          </el-steps>
-        </div>
-
-        <div class="card" style="margin-top: 20px;">
-          <div class="card-title">
-            <el-icon><LightBulb /></el-icon>
-            场景示例
-          </div>
-          <p class="example-text">
-            音乐平台在用户点击播放按钮时，调用此接口核验该用户是否对目标歌曲持有有效授权。这是版权合规播放的核心环节，确保每一次播放都有合法授权依据。
-          </p>
-        </div>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
@@ -142,7 +155,6 @@ async function handleRecordUsage() {
   try {
     await api.post('/license/record-usage', { licenseID: result.value.license.licenseID })
     ElMessage.success('已记录一次使用')
-    // re-verify to show updated count
     handleVerify()
   } catch (e) { /* handled */ }
   finally { recording.value = false }
@@ -155,10 +167,10 @@ function formatDate(d) {
 </script>
 
 <style lang="scss" scoped>
-.result-card {
-  border-radius: 16px;
+.result-panel {
+  gap: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
+  padding: 0;
 }
 
 .result-header {
@@ -175,20 +187,26 @@ function formatDate(d) {
     color: #ef4444;
   }
 
-  h3 { margin: 12px 0 6px; font-size: 20px; }
-  .reason { font-size: 14px; color: var(--text-secondary); }
+  h3 {
+    margin: 12px 0 6px;
+    font-size: 20px;
+  }
+
+  .reason {
+    font-size: 14px;
+    color: #64748b;
+  }
 }
 
-.result-detail {
-  padding: 24px;
-  background: #fff;
+.steps {
+  :deep(.el-step__title) {
+    font-weight: 500;
+  }
 }
-
-.steps { :deep(.el-step__title) { font-weight: 500; } }
 
 .example-text {
   line-height: 1.8;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: #64748b;
 }
 </style>

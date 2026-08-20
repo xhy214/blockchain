@@ -1,119 +1,139 @@
 <template>
   <div class="page-container" v-loading="loading">
-    <div class="page-header">
-      <div style="display:flex; align-items:center; gap:12px;">
+    <div class="page-inner">
+      <div class="page-header-bar">
         <el-button @click="$router.back()" :icon="ArrowLeft" circle plain />
-        <div>
-          <h1>作品详情</h1>
-          <p>查看作品存证信息、链上历史、授权记录等</p>
+        <div class="page-header-title">
+          <div class="header-icon">
+            <el-icon :size="24"><Headset /></el-icon>
+          </div>
+          作品详情
         </div>
       </div>
+      <div class="page-header-desc">查看作品存证信息、链上历史、授权记录等</div>
+
+      <template v-if="work">
+        <div class="panel-row">
+          <div class="panel-main">
+            <div class="panel">
+              <div class="panel-body">
+                <div class="info-header">
+                  <div class="work-cover">
+                    <el-icon :size="48" color="#fff"><Headset /></el-icon>
+                  </div>
+                  <div class="work-info">
+                    <h2>{{ work.title }}</h2>
+                    <p class="artist">{{ work.artist }}</p>
+                    <div class="meta-tags">
+                      <el-tag v-if="work.genre" type="info">{{ work.genre }}</el-tag>
+                      <el-tag :type="statusTagType(work.status)">{{ statusLabel(work.status) }}</el-tag>
+                    </div>
+                  </div>
+                  <div class="action-group">
+                    <el-button type="primary" @click="$router.push(`/works/${work.workID}/certificate`)">
+                      <el-icon><Medal /></el-icon>&nbsp;存证证书
+                    </el-button>
+                    <el-button @click="$router.push(`/works/${work.workID}/verify-hash`)">
+                      <el-icon><Check /></el-icon>&nbsp;哈希验真
+                    </el-button>
+                    <el-button @click="$router.push(`/works/${work.workID}/transfer`)">
+                      <el-icon><Share /></el-icon>&nbsp;版权转让
+                    </el-button>
+                    <el-button @click="$router.push(`/works/${work.workID}/dispute`)">
+                      <el-icon><Warning /></el-icon>&nbsp;争议存证
+                    </el-button>
+                  </div>
+                </div>
+
+                <el-divider />
+
+                <el-descriptions :column="2" border>
+                  <el-descriptions-item label="作品 ID">
+                    <code>{{ work.workID }}</code>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="交易 ID">
+                    <code v-if="work.txID">{{ work.txID }}</code>
+                    <span v-else>-</span>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="SHA-256 哈希" :span="2">
+                    <code class="hash">{{ work.fileHash }}</code>
+                    <el-button link type="primary" size="small" @click="copyHash">复制</el-button>
+                  </el-descriptions-item>
+                  <el-descriptions-item label="存证时间" :span="2">{{ formatTime(work.registerAt) }}</el-descriptions-item>
+                  <el-descriptions-item label="作品描述" :span="2">
+                    <span v-if="work.description">{{ work.description }}</span>
+                    <span v-else class="text-muted">暂无描述</span>
+                  </el-descriptions-item>
+                </el-descriptions>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <el-icon><Clock /></el-icon>
+                  链上历史记录
+                </div>
+              </div>
+              <div class="panel-body">
+                <el-timeline v-if="history.length">
+                  <el-timeline-item
+                    v-for="(record, idx) in history"
+                    :key="idx"
+                    :timestamp="formatTime(record.timestamp)"
+                    :type="record.type === 'RegisterWork' ? 'success' : record.type === 'TransferCopyright' ? 'warning' : 'info'"
+                  >
+                    <strong>{{ typeLabel(record.type) }}</strong>
+                    <pre class="history-data">{{ JSON.stringify(record, null, 2) }}</pre>
+                  </el-timeline-item>
+                </el-timeline>
+                <div v-else class="empty-state">
+                  <el-icon :size="48"><Clock /></el-icon>
+                  <p>暂无历史记录</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-side">
+            <div class="info-card">
+              <div class="info-card-title">
+                <div class="icon-badge icon-badge-1">
+                  <el-icon :size="24"><Tickets /></el-icon>
+                </div>
+                相关授权
+              </div>
+              <div v-loading="loadingLicenses">
+                <div v-if="licenses.length">
+                  <div v-for="lic in licenses" :key="lic.licenseID" class="license-item">
+                    <div class="license-header">
+                      <el-tag :type="lic.status === 'ACTIVE' ? 'success' : 'info'" size="small">
+                        {{ lic.status === 'ACTIVE' ? '有效' : '已撤销' }}
+                      </el-tag>
+                      <span class="license-type">{{ lic.licenseType }}</span>
+                    </div>
+                    <div class="license-detail">
+                      <p><strong>被授权人：</strong>{{ lic.licenseeID }}</p>
+                      <p><strong>有效期：</strong>{{ lic.startDate }} ~ {{ lic.endDate }}</p>
+                      <p><strong>使用：</strong>{{ lic.usedCount }} / {{ lic.maxUsage || '不限次' }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="empty-state" style="padding: 40px 0;">
+                  <el-icon :size="36"><Tickets /></el-icon>
+                  <p>暂无授权记录</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <div v-else-if="!loading" class="empty-state">
+        <el-icon :size="48"><Search /></el-icon>
+        <p>未找到该作品</p>
+      </div>
     </div>
-
-    <template v-if="work">
-      <el-row :gutter="24">
-        <el-col :xs="24" :lg="16">
-          <div class="card info-card">
-            <div class="info-header">
-              <div class="work-cover">
-                <el-icon :size="48" color="#fff"><Headset /></el-icon>
-              </div>
-              <div class="work-info">
-                <h2>{{ work.title }}</h2>
-                <p class="artist">{{ work.artist }}</p>
-                <div class="meta-tags">
-                  <el-tag v-if="work.genre" type="info">{{ work.genre }}</el-tag>
-                  <el-tag :type="statusTagType(work.status)">{{ statusLabel(work.status) }}</el-tag>
-                </div>
-              </div>
-              <div class="action-group">
-                <el-button type="primary" @click="$router.push(`/works/${work.workID}/certificate`)">
-                  <el-icon><Medal /></el-icon>&nbsp;存证证书
-                </el-button>
-                <el-button @click="$router.push(`/works/${work.workID}/verify-hash`)">
-                  <el-icon><Check /></el-icon>&nbsp;哈希验真
-                </el-button>
-                <el-button @click="$router.push(`/works/${work.workID}/transfer`)">
-                  <el-icon><Share /></el-icon>&nbsp;版权转让
-                </el-button>
-                <el-button @click="$router.push(`/works/${work.workID}/dispute`)">
-                  <el-icon><Warning /></el-icon>&nbsp;争议存证
-                </el-button>
-              </div>
-            </div>
-
-            <el-divider />
-
-            <el-descriptions :column="2" border>
-              <el-descriptions-item label="作品 ID">
-                <code>{{ work.workID }}</code>
-              </el-descriptions-item>
-              <el-descriptions-item label="交易 ID">
-                <code v-if="work.txID">{{ work.txID }}</code>
-                <span v-else>-</span>
-              </el-descriptions-item>
-              <el-descriptions-item label="SHA-256 哈希" :span="2">
-                <code class="hash">{{ work.fileHash }}</code>
-                <el-button link type="primary" size="small" @click="copyHash">复制</el-button>
-              </el-descriptions-item>
-              <el-descriptions-item label="存证时间" :span="2">{{ formatTime(work.registerAt) }}</el-descriptions-item>
-              <el-descriptions-item label="作品描述" :span="2">
-                <span v-if="work.description">{{ work.description }}</span>
-                <span v-else class="text-muted">暂无描述</span>
-              </el-descriptions-item>
-            </el-descriptions>
-          </div>
-
-          <div class="card" style="margin-top: 20px;">
-            <div class="card-title">
-              <el-icon><Clock /></el-icon>
-              链上历史记录
-            </div>
-            <el-timeline v-if="history.length">
-              <el-timeline-item
-                v-for="(record, idx) in history"
-                :key="idx"
-                :timestamp="formatTime(record.timestamp)"
-                :type="record.type === 'RegisterWork' ? 'success' : record.type === 'TransferCopyright' ? 'warning' : 'info'"
-              >
-                <strong>{{ typeLabel(record.type) }}</strong>
-                <pre class="history-data">{{ JSON.stringify(record, null, 2) }}</pre>
-              </el-timeline-item>
-            </el-timeline>
-            <el-empty v-else description="暂无历史记录" />
-          </div>
-        </el-col>
-
-        <el-col :xs="24" :lg="8">
-          <div class="card">
-            <div class="card-title">
-              <el-icon><Tickets /></el-icon>
-              相关授权
-            </div>
-            <div v-loading="loadingLicenses">
-              <div v-if="licenses.length">
-                <div v-for="lic in licenses" :key="lic.licenseID" class="license-item">
-                  <div class="license-header">
-                    <el-tag :type="lic.status === 'ACTIVE' ? 'success' : 'info'" size="small">
-                      {{ lic.status === 'ACTIVE' ? '有效' : '已撤销' }}
-                    </el-tag>
-                    <span class="license-type">{{ lic.licenseType }}</span>
-                  </div>
-                  <div class="license-detail">
-                    <p><strong>被授权人：</strong>{{ lic.licenseeID }}</p>
-                    <p><strong>有效期：</strong>{{ lic.startDate }} ~ {{ lic.endDate }}</p>
-                    <p><strong>使用：</strong>{{ lic.usedCount }} / {{ lic.maxUsage || '不限次' }}</p>
-                  </div>
-                </div>
-              </div>
-              <el-empty v-else description="暂无授权记录" :image-size="80" />
-            </div>
-          </div>
-        </el-col>
-      </el-row>
-    </template>
-
-    <el-empty v-else-if="!loading" description="未找到该作品" />
   </div>
 </template>
 
@@ -158,7 +178,6 @@ async function fetchHistory() {
 async function fetchLicenses() {
   loadingLicenses.value = true
   try {
-    // Get licenses by work
     const all = await api.get('/license/my')
     licenses.value = (all.data || []).filter(l => l.workID === route.params.workID)
   } catch (e) { /* ignore */ }
@@ -197,7 +216,7 @@ function copyHash() {
 .work-cover {
   width: 100px;
   height: 100px;
-  border-radius: 16px;
+  border-radius: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
@@ -223,14 +242,14 @@ function copyHash() {
   font-size: 13px;
   background: #f1f5f9;
   padding: 6px 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   display: inline-block;
 }
 
 .history-data {
   background: #f8fafc;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 10px;
   font-size: 12px;
   margin-top: 8px;
   overflow-x: auto;
@@ -239,10 +258,10 @@ function copyHash() {
 .text-muted { color: var(--text-light); }
 
 .license-item {
-  padding: 12px;
+  padding: 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
   background: #f8fafc;
 }
 

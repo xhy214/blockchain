@@ -18,7 +18,7 @@
               <el-input
                 v-model="keyword"
                 placeholder="输入作品名或艺术家"
-                :prefix-icon="Search"
+                prefix-icon="Search"
                 clearable
                 style="width: 400px;"
                 @keyup.enter="handleSearch"

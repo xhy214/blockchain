@@ -101,7 +101,7 @@
 
           <div class="info-card">
             <div class="info-card-title">
-              <span class="icon-badge icon-badge-1"><el-icon :size="24"><LightBulb /></el-icon></span>
+              <span class="icon-badge icon-badge-1"><el-icon :size="24"><Reading /></el-icon></span>
               场景示例
             </div>
             <p class="example-text">

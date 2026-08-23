@@ -2,7 +2,9 @@
   <div class="page-container">
     <div class="page-inner">
       <div class="page-header-bar">
-        <el-button @click="$router.back()" :icon="ArrowLeft" circle plain />
+        <el-button @click="$router.back()" circle plain>
+          <el-icon><ArrowLeft /></el-icon>
+        </el-button>
         <div class="page-header-title">
           <div class="header-icon">
             <el-icon :size="24"><Lock /></el-icon>

@@ -28,7 +28,7 @@ const routes = [
         path: 'works',
         name: 'MyWorks',
         component: () => import('@/views/works/MyWorks.vue'),
-        meta: { title: '我的作品', icon: 'Music' }
+        meta: { title: '我的作品', icon: 'Headset' }
       },
       {
         path: 'works/register',

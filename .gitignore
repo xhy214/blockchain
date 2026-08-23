@@ -7,10 +7,6 @@ backend/config.yaml
 # 保留示例配置，供他人拷贝使用
 !backend/config.yaml.example
 
-# —— 个人使用的一键启动脚本（含用户名硬编码路径，不提交到仓库） ——
-start_backend.sh
-start_frontend.sh
-
 # 前端
 frontend/node_modules/
 frontend/dist/

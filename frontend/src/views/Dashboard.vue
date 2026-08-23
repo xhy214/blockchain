@@ -261,6 +261,10 @@ function getCoverGradient(genre) {
 </script>
 
 <style lang="scss" scoped>
+/* 核心思路：保持原始设计像素值不变，用 zoom 等比缩放整个容器 */
+/* 设计基准：2180px 宽度（不含侧边栏） */
+/* 缩放因子 = (视口宽度 - 侧边栏260px) / 2180 */
+
 .dashboard {
   height: calc(100vh - 80px);
   width: 100%;
@@ -276,6 +280,8 @@ function getCoverGradient(genre) {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  /* 关键：等比缩放，完美保留原始设计比例 */
+  zoom: calc((100vw - 260px) / 2180);
 }
 
 /* ============ 统计卡片行 ============ */

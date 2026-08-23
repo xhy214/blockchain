@@ -281,7 +281,7 @@ function getCoverGradient(genre) {
   flex-direction: column;
   box-sizing: border-box;
   /* 关键：等比缩放，完美保留原始设计比例 */
-  zoom: calc((100vw - 260px) / 2180);
+  zoom: calc((100vw - 260px) / 2180px);
 }
 
 /* ============ 统计卡片行 ============ */

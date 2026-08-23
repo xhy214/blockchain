@@ -103,12 +103,24 @@
           </transition>
         </router-view>
       </el-main>
+
+      <el-dialog v-model="profileVisible" title="个人信息" width="420px">
+        <div v-loading="profileLoading" class="profile-dialog">
+          <div class="profile-avatar">
+            {{ profileData?.username?.[0]?.toUpperCase() || 'U' }}
+          </div>
+          <div class="profile-row"><span class="label">用户名</span><span class="value">{{ profileData?.username }}</span></div>
+          <div class="profile-row"><span class="label">真实姓名</span><span class="value">{{ profileData?.realName || '未填写' }}</span></div>
+          <div class="profile-row"><span class="label">用户ID</span><span class="value">{{ profileData?.id }}</span></div>
+          <div class="profile-row"><span class="label">注册时间</span><span class="value">{{ profileData?.createdAt }}</span></div>
+        </div>
+      </el-dialog>
     </el-container>
   </el-container>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { ElMessageBox } from 'element-plus'
@@ -119,6 +131,22 @@ const userStore = useUserStore()
 
 const activeMenu = computed(() => route.path)
 const currentTitle = computed(() => route.meta.title)
+
+const profileVisible = ref(false)
+const profileLoading = ref(false)
+const profileData = ref(null)
+
+async function showProfile() {
+  profileVisible.value = true
+  profileLoading.value = true
+  try {
+    profileData.value = await userStore.fetchProfile()
+  } catch (e) {
+    // interceptor 已提示错误
+  } finally {
+    profileLoading.value = false
+  }
+}
 
 function handleCommand(command) {
   if (command === 'logout') {
@@ -131,7 +159,7 @@ function handleCommand(command) {
       router.push('/login')
     }).catch(() => {})
   } else if (command === 'profile') {
-    // Could navigate to profile page
+    showProfile()
   }
 }
 </script>
@@ -259,6 +287,49 @@ function handleCommand(command) {
   background: #f5f7fb;
   overflow-y: auto;
   padding: 0;
+}
+
+.profile-dialog {
+  padding: 8px 0;
+
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .profile-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 4px;
+    border-bottom: 1px dashed var(--border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: var(--text-secondary, #64748b);
+      font-size: 14px;
+    }
+
+    .value {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-primary, #1e293b);
+      max-width: 220px;
+      word-break: break-all;
+      text-align: right;
+    }
+  }
 }
 
 .fade-enter-active,

@@ -56,7 +56,6 @@
                     :auto-upload="false"
                     :on-change="handleFileChange"
                     :show-file-list="false"
-                    :limit="1"
                     accept="audio/*"
                     class="upload-area"
                   >

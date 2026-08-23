@@ -38,6 +38,6 @@ type DisputeRecord struct {
 
 type VerifyResult struct {
 	Valid   bool     `json:"valid"`
-	Reason  string   `json:"reason,omitempty"`
-	License *License `json:"license,omitempty"`
+	Reason  string   `json:"reason,omitempty" metadata:"reason,optional"`
+	License *License `json:"license,omitempty" metadata:"license,optional"`
 }

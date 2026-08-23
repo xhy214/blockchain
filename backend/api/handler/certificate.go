@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"blockchain/backend/service"
@@ -65,5 +66,10 @@ func (h *CertificateHandler) QueryDisputes(c *gin.Context) {
 		utils.Error(c, 5001, "查询争议失败: "+err.Error())
 		return
 	}
-	utils.RawJSON(c, 200, data)
+	var disputes interface{}
+	if err := json.Unmarshal(data, &disputes); err != nil {
+		utils.Error(c, 5001, "查询争议解析失败: "+err.Error())
+		return
+	}
+	utils.Success(c, disputes)
 }

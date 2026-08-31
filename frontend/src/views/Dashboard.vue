@@ -350,7 +350,8 @@ function getCoverGradient(genre) {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: var(--font-display);
+  /* 与侧栏菜单同为无衬线：衬线展示体同字号下观感偏小，用户始终觉得不等大 */
+  font-family: var(--font-body);
   /* 19×zoom(≈0.8)≈15px，与侧栏一级菜单等大 */
   font-size: 19px;
   font-weight: 700;

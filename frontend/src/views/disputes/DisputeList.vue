@@ -36,7 +36,7 @@
                       <code>{{ d.workID }}</code>
                     </el-descriptions-item>
                     <el-descriptions-item label="申请人">{{ d.claimantID }}</el-descriptions-item>
-                    <el-descriptions-item label="状态">{{ d.status }}</el-descriptions-item>
+                    <el-descriptions-item label="状态">{{ d.status === 'PENDING' ? '处理中' : '已解决' }}</el-descriptions-item>
                     <el-descriptions-item label="证据说明" :span="2">
                       <p style="line-height: 1.6;">{{ d.evidence }}</p>
                     </el-descriptions-item>

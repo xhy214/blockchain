@@ -112,7 +112,7 @@
                       <el-tag :type="lic.status === 'ACTIVE' ? 'success' : 'info'" size="small">
                         {{ lic.status === 'ACTIVE' ? '有效' : '已撤销' }}
                       </el-tag>
-                      <span class="license-type">{{ lic.licenseType }}</span>
+                      <span class="license-type">{{ licenseTypeLabel(lic.licenseType) }}</span>
                     </div>
                     <div class="license-detail">
                       <p><strong>被授权人：</strong>{{ lic.licenseeID }}</p>
@@ -198,6 +198,9 @@ function typeLabel(t) {
     FileDispute: '争议存证'
   }
   return m[t] || t
+}
+function licenseTypeLabel(t) {
+  return { COMMERCIAL: '商业', NON_COMMERCIAL: '非商业', EXCLUSIVE: '独家' }[t] || t
 }
 function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('zh-CN') }
 function copyHash() {

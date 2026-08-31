@@ -48,7 +48,7 @@
             <template v-if="result.valid && result.license">
               <div class="panel-body">
                 <el-descriptions :column="2" border>
-                  <el-descriptions-item label="授权类型">{{ result.license.licenseType }}</el-descriptions-item>
+                  <el-descriptions-item label="授权类型">{{ typeLabel(result.license.licenseType) }}</el-descriptions-item>
                   <el-descriptions-item label="授权 ID">
                     <code>{{ result.license.licenseID }}</code>
                   </el-descriptions-item>
@@ -92,7 +92,7 @@
             </div>
             <el-steps direction="vertical" :active="0" class="steps">
               <el-step title="查找授权" description="查找该用户对该作品的所有授权" />
-              <el-step title="检查状态" description="授权是否为 ACTIVE 状态" />
+              <el-step title="检查状态" description="授权当前是否处于有效状态" />
               <el-step title="检查时效" description="当前时间是否在有效期内" />
               <el-step title="检查次数" description="使用次数是否未超过上限" />
               <el-step title="返回结果" description="全部通过 → 授权有效" />
@@ -163,6 +163,10 @@ async function handleRecordUsage() {
 function formatDate(d) {
   if (!d) return '-'
   return new Date(d).toLocaleDateString('zh-CN')
+}
+
+function typeLabel(t) {
+  return { COMMERCIAL: '商业使用', NON_COMMERCIAL: '非商业使用', EXCLUSIVE: '独家授权' }[t] || t
 }
 </script>
 

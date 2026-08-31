@@ -141,6 +141,14 @@
                 <div v-else class="mini-empty">暂无争议存证</div>
               </div>
             </div>
+
+            <div class="wave-bar" aria-hidden="true">
+              <span
+                v-for="(h, i) in waveBars"
+                :key="i"
+                :style="{ '--h': h + 'px', '--d': (i * 0.06) + 's', '--t': (1.5 + (i % 6) * 0.18) + 's' }"
+              ></span>
+            </div>
           </div>
         </div>
 
@@ -199,6 +207,11 @@ const stats = reactive({
   licenses: 0,
   searchCount: 0,
   disputes: 0
+})
+
+const waveBars = Array.from({ length: 96 }, (_, i) => {
+  const t = Math.abs(Math.sin(i * 0.28)) * 0.7 + Math.abs(Math.sin(i * 0.07 + 1.3)) * 0.3
+  return Math.round(8 + t * 28)
 })
 
 onMounted(async () => {
@@ -666,6 +679,39 @@ function getCoverGradient(genre) {
   justify-content: center;
   font-size: 17px;
   color: var(--text-light);
+}
+
+/* 波形装饰条：金色均衡器，纯装饰不承载数据 */
+.wave-bar {
+  flex-shrink: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+
+  span {
+    flex: 1;
+    min-width: 3px;
+    height: var(--h, 20px);
+    border-radius: 3px;
+    background: linear-gradient(180deg, rgba(201, 168, 106, 0.75) 0%, rgba(201, 168, 106, 0.18) 100%);
+    transform-origin: center;
+    animation: wave-eq var(--t, 1.8s) ease-in-out var(--d, 0s) infinite alternate;
+  }
+}
+
+@keyframes wave-eq {
+  from { transform: scaleY(0.4); }
+  to { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-bar span { animation: none; }
 }
 
 /* ============ 右侧面板组 ============ */

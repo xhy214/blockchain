@@ -17,60 +17,82 @@
 
 本项目在 **WSL 2（Ubuntu 24.04）** 中运行，Fabric 网络跑在 Docker 容器内。已配置国内网络（Docker 镜像加速、Go 模块代理、npm 镜像），无需翻墙。
 
-WSL 内已装好：Docker、Go 1.22、Node 18、MySQL 8、Fabric 工具链（`cryptogen` / `configtxgen` v2.5.16）。项目代码位于 WSL 内 `~/blockchain`。
+WSL 内已装好：Docker、Go 1.22、Node 18、MySQL 8、Fabric 工具链（`cryptogen` / `configtxgen` v2.5.16）。项目代码位于 Windows D 盘 `D:\blockchainlesson\Github\blockchain`，WSL 内通过 `/mnt/d/blockchainlesson/Github/blockchain` 访问。
 
 ## 启动步骤（在 WSL 内执行）
 
-### 1. 进入 WSL，确认 Docker 已启动
+### 一键启动（推荐）
+
+**终端 1 —— 后端（自动包含 Fabric 网络启动与链码部署）：**
+
+```bash
+bash /mnt/d/blockchainlesson/Github/blockchain/start_backend.sh
+```
+
+脚本自动完成：前置检查（docker / go / config.yaml）→ `bootstrap.sh`（生成证书 → 启动容器 → 创建通道）→ 修正证书目录权限 → `deploy.sh`（部署链码）→ 启动后端 `:8080`。中途需要输入一次 sudo 密码。
+
+启动成功日志依次出现：`MySQL connected` → `Fabric Gateway connected` → `Server starting on :8080`。
+
+**终端 2 —— 前端：**
+
+```bash
+bash /mnt/d/blockchainlesson/Github/blockchain/start_frontend.sh
+```
+
+自动检查 node/npm，`node_modules` 缺失时自动 `npm install`，然后启动 Vite 开发服务器。
+
+浏览器访问 **http://localhost:5173**（vite 将 `/api` 代理到后端 8080）。
+
+> Ctrl+C 停止前后端进程；Fabric 容器不受影响，彻底关闭见下方「停止 / 清理」。
+
+### 手动分步执行（备查，与脚本等价）
+
+#### 1. 进入 WSL，确认 Docker 已启动
 
 ```bash
 wsl
 sudo systemctl start docker    # 未自动启动时执行
 ```
 
-### 2. 启动 Fabric 网络
+#### 2. 启动 Fabric 网络
 
 ```bash
-cd ~/blockchain/network/scripts
+cd /mnt/d/blockchainlesson/Github/blockchain/network/scripts
 sudo bash bootstrap.sh    # 生成证书 → 启动容器 → 创建通道
 ```
 
 > **注意**：bootstrap 会重新生成 crypto-config（root 所有）。后端启动前需授权：
 
 ```bash
-sudo chown -R xhy:xhy ~/blockchain/network/crypto-config
+sudo chown -R xhy:xhy /mnt/d/blockchainlesson/Github/blockchain/network/crypto-config
 ```
 
-### 3. 部署链码
+#### 3. 部署链码
 
 ```bash
-cd ~/blockchain/network/scripts
+cd /mnt/d/blockchainlesson/Github/blockchain/network/scripts
 sudo bash deploy.sh       # 打包 → 安装 → 审批 → 提交链码
 ```
 
-### 4. 启动后端 API
+#### 4. 启动后端 API
 
 ```bash
-cd ~/blockchain/backend
+cd /mnt/d/blockchainlesson/Github/blockchain/backend
 GOPROXY=https://goproxy.cn,direct GOSUMDB=off go run main.go
 ```
 
-启动成功日志依次出现：`MySQL connected` → `Fabric Gateway connected` → `Server starting on :8080`。
-
-### 5. 启动前端
+#### 5. 启动前端
 
 ```bash
-cd ~/blockchain/frontend
+cd /mnt/d/blockchainlesson/Github/blockchain/frontend
 npm install     # 首次需要
 npm run dev
 ```
 
-浏览器访问 **http://localhost:5173**（vite 将 `/api` 代理到后端 8080）。
-
 ## 停止 / 清理
 
 ```bash
-cd ~/blockchain/network/scripts
+cd /mnt/d/blockchainlesson/Github/blockchain/network/scripts
 sudo bash teardown.sh    # 停止容器、删除链码镜像、清空证书与通道工件
 ```
 

@@ -352,8 +352,8 @@ function getCoverGradient(genre) {
   gap: 12px;
   /* 与侧栏菜单同为无衬线：衬线展示体同字号下观感偏小，用户始终觉得不等大 */
   font-family: var(--font-body);
-  /* 19×zoom(≈0.8)≈15px，与侧栏一级菜单等大 */
-  font-size: 19px;
+  /* 21×zoom(≈0.8)≈16.7px：数值等大在 zoom 缩放下观感偏小，故比菜单(15px)大半档 */
+  font-size: 21px;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--text-primary);

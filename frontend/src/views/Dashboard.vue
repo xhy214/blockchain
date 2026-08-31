@@ -101,6 +101,46 @@
                 </div>
               </div>
             </template>
+
+            <div class="bottom-grid">
+              <div class="mini-panel">
+                <div class="mini-header">
+                  <el-icon :size="20"><Key /></el-icon>
+                  最近授权
+                </div>
+                <div v-if="recentLicenses.length" class="mini-list">
+                  <div v-for="lic in recentLicenses" :key="lic.licenseID" class="mini-item">
+                    <div class="mini-icon"><el-icon :size="20"><Key /></el-icon></div>
+                    <div class="mini-meta">
+                      <div class="mini-title">{{ licenseTypeLabel(lic.licenseType) }}</div>
+                      <div class="mini-sub">作品 {{ shortID(lic.workID) }}</div>
+                    </div>
+                    <el-tag :type="lic.status === 'ACTIVE' ? 'success' : 'info'" size="small" round>{{ licenseStatus(lic.status) }}</el-tag>
+                    <div class="mini-time">{{ formatDay(lic.endDate) }}</div>
+                  </div>
+                </div>
+                <div v-else class="mini-empty">暂无授权记录</div>
+              </div>
+
+              <div class="mini-panel">
+                <div class="mini-header">
+                  <el-icon :size="20"><Warning /></el-icon>
+                  最近争议
+                </div>
+                <div v-if="recentDisputes.length" class="mini-list">
+                  <div v-for="d in recentDisputes" :key="d.disputeID" class="mini-item">
+                    <div class="mini-icon"><el-icon :size="20"><Warning /></el-icon></div>
+                    <div class="mini-meta">
+                      <div class="mini-title">作品 {{ shortID(d.workID) }}</div>
+                      <div class="mini-sub">申请人 {{ shortID(d.claimantID) }}</div>
+                    </div>
+                    <el-tag :type="d.status === 'PENDING' ? 'warning' : 'success'" size="small" round>{{ disputeStatus(d.status) }}</el-tag>
+                    <div class="mini-time">{{ formatDay(d.filedAt) }}</div>
+                  </div>
+                </div>
+                <div v-else class="mini-empty">暂无争议存证</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -151,6 +191,8 @@ import api from '@/api'
 const userStore = useUserStore()
 const loadingWorks = ref(false)
 const recentWorks = ref([])
+const recentLicenses = ref([])
+const recentDisputes = ref([])
 
 const stats = reactive({
   works: 0,
@@ -181,9 +223,23 @@ onMounted(async () => {
 
   try {
     const res = await api.get('/license/my')
-    stats.licenses = (res.data || []).length
+    const list = res.data || []
+    stats.licenses = list.length
+    recentLicenses.value = list.slice(0, 3)
   } catch (e) {
     stats.licenses = 3
+  }
+
+  try {
+    const targets = recentWorks.value.slice(0, 3)
+    const lists = await Promise.all(
+      targets.map(w => api.get(`/dispute/${w.workID}`).catch(() => ({ data: [] })))
+    )
+    const all = lists.flatMap(r => r.data || [])
+    all.sort((a, b) => new Date(b.filedAt) - new Date(a.filedAt))
+    recentDisputes.value = all.slice(0, 3)
+  } catch (e) {
+    recentDisputes.value = []
   }
 
   try {
@@ -208,6 +264,16 @@ function formatTime(t) {
   if (!t) return '-'
   return new Date(t).toLocaleString('zh-CN')
 }
+
+function formatDay(d) {
+  if (!d) return '-'
+  return new Date(d).toLocaleDateString('zh-CN')
+}
+
+function shortID(id) { return id ? String(id).slice(0, 8) : '-' }
+function licenseTypeLabel(t) { return { COMMERCIAL: '商业使用', NON_COMMERCIAL: '非商业使用', EXCLUSIVE: '独家授权' }[t] || t }
+function licenseStatus(s) { return s === 'ACTIVE' ? '有效' : '已撤销' }
+function disputeStatus(s) { return s === 'PENDING' ? '处理中' : '已解决' }
 
 function getCoverGradient(genre) {
   const map = {
@@ -383,6 +449,9 @@ function getCoverGradient(genre) {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* 空状态 */
@@ -487,6 +556,113 @@ function getCoverGradient(genre) {
 .work-arrow {
   color: var(--text-light);
   flex-shrink: 0;
+}
+
+/* ============ 主面板底部：最近授权 / 最近争议 ============ */
+.bottom-grid {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.mini-panel {
+  flex: 1;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.mini-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+
+  .el-icon {
+    color: var(--accent-bright);
+  }
+}
+
+.mini-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.mini-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  flex: 1;
+  min-height: 56px;
+
+  :deep(.el-tag) {
+    font-size: 14px;
+  }
+}
+
+.mini-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  border: 1px solid rgba(201, 168, 106, 0.28);
+  color: var(--accent-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mini-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.mini-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.mini-sub {
+  font-size: 15px;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-time {
+  font-size: 15px;
+  color: var(--text-light);
+  flex-shrink: 0;
+}
+
+.mini-empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  color: var(--text-light);
 }
 
 /* ============ 右侧面板组 ============ */

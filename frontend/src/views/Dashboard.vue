@@ -111,7 +111,7 @@
           <div class="side-panel tips-panel">
             <div class="panel-header">
               <div class="panel-title">
-                <el-icon :size="22"><InfoFilled /></el-icon>
+                <el-icon :size="26"><InfoFilled /></el-icon>
                 使用提示
               </div>
             </div>
@@ -506,7 +506,7 @@ function getCoverGradient(genre) {
   }
 
   .panel-title {
-    font-size: 17px;
+    font-size: 20px;
   }
 }
 
@@ -536,14 +536,14 @@ function getCoverGradient(genre) {
 }
 
 .tip-step {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--accent-bright);
   letter-spacing: 0.08em;
 }
 
 .tip-text {
-  font-size: 16px;
+  font-size: 20px;
   color: var(--text-secondary);
   line-height: 1.7;
 }

@@ -194,7 +194,7 @@ function formatDate(d) {
 
   .reason {
     font-size: 14px;
-    color: #64748b;
+    color: var(--text-secondary);
   }
 }
 
@@ -207,6 +207,6 @@ function formatDate(d) {
 .example-text {
   line-height: 1.8;
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 </style>

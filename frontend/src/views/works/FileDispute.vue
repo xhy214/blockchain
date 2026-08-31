@@ -171,7 +171,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   border: 1px solid var(--border);
   border-radius: 12px;
   margin-bottom: 12px;
-  background: #f8fafc;
+  background: var(--surface-2);
 }
 
 .dispute-header {

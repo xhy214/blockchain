@@ -91,7 +91,7 @@ function formatTime(t) {
 
 <style lang="scss" scoped>
 .dispute-card {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 16px;

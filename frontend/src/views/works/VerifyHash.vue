@@ -38,7 +38,7 @@
                       <p class="upload-hint">上传文件用于本地计算哈希，不会发送到服务器</p>
                     </div>
                     <div v-else class="upload-selected">
-                      <el-icon :size="32" color="#667eea"><Headset /></el-icon>
+                      <el-icon :size="32" color="#DCC189"><Headset /></el-icon>
                       <div class="file-info">
                         <div class="file-name">{{ fileInfo.name }}</div>
                         <div class="file-size">{{ formatFileSize(fileInfo.size) }}</div>
@@ -203,8 +203,8 @@ function formatFileSize(bytes) {
   transition: border-color 0.2s, background 0.2s;
 
   &:hover {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(118,75,162,0.06) 100%);
+    border-color: var(--accent);
+    background: var(--accent-soft);
   }
 
   .upload-icon { color: var(--primary); margin-bottom: 12px; }
@@ -216,7 +216,7 @@ function formatFileSize(bytes) {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);
+  background: var(--accent-soft);
   border-radius: 20px;
   padding: 20px;
   border: 1px solid var(--border);
@@ -229,16 +229,16 @@ function formatFileSize(bytes) {
 .hash-display {
   margin-top: 14px;
   padding: 12px 16px;
-  background: #f1f5f9;
+  background: var(--surface-2);
   border-radius: 12px;
   font-size: 12px;
-  color: #475569;
+  color: var(--text-secondary);
   display: flex;
   align-items: center;
   gap: 10px;
   word-break: break-all;
 
-  code { font-family: monospace; color: #667eea; }
+  code { font-family: monospace; color: var(--accent-bright); }
 }
 
 .result-section {

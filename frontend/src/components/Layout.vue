@@ -2,17 +2,15 @@
   <el-container class="layout-container">
     <el-aside width="260px" class="sidebar">
       <div class="logo-area" @click="$router.push('/')">
-        <div class="logo-icon">
-          <el-icon :size="28"><Headset /></el-icon>
-        </div>
+        <div class="logo-vinyl vinyl"></div>
         <span class="logo-text">版权存证</span>
       </div>
       <el-menu
         :default-active="activeMenu"
         router
         background-color="transparent"
-        text-color="rgba(255,255,255,0.7)"
-        active-text-color="#ffffff"
+        text-color="#A9B1C0"
+        active-text-color="#DCC189"
         class="sidebar-menu"
       >
         <el-menu-item index="/">
@@ -171,7 +169,8 @@ function handleCommand(command) {
 
 .sidebar {
   width: 260px !important;
-  background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+  background: var(--bg-deep);
+  border-right: 1px solid var(--line);
   overflow: hidden;
 }
 
@@ -182,25 +181,21 @@ function handleCommand(command) {
   padding: 0 28px;
   gap: 16px;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid var(--line);
 }
 
-.logo-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
+.logo-vinyl {
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
 }
 
 .logo-text {
-  font-size: 22px;
+  font-family: var(--font-display);
+  font-size: 21px;
   font-weight: 700;
-  color: #fff;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
   white-space: nowrap;
 }
 
@@ -210,20 +205,22 @@ function handleCommand(command) {
 
   :deep(.el-menu-item),
   :deep(.el-sub-menu__title) {
-    border-radius: 12px;
+    border-radius: var(--radius-control);
     margin-bottom: 6px;
     height: 48px;
     line-height: 48px;
     font-size: 15px;
 
     &:hover {
-      background: rgba(255,255,255,0.1);
+      background: var(--sidebar-hover);
+      color: var(--accent-bright);
     }
   }
 
   :deep(.el-menu-item.is-active) {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
+    background: var(--accent-soft);
+    color: var(--accent-bright);
+    font-weight: 600;
   }
 
   :deep(.el-sub-menu .el-menu-item) {
@@ -236,8 +233,8 @@ function handleCommand(command) {
 }
 
 .header {
-  background: #fff;
-  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -249,7 +246,7 @@ function handleCommand(command) {
   display: flex;
   align-items: center;
   gap: 20px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .header-right {
@@ -267,24 +264,25 @@ function handleCommand(command) {
   transition: background 0.2s;
 
   &:hover {
-    background: #f1f5f9;
+    background: var(--surface-2);
   }
 }
 
 .user-avatar {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: var(--accent-soft);
+  border: 1px solid rgba(201, 168, 106, 0.35);
+  color: var(--accent-bright);
   font-weight: 600;
 }
 
 .username {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text-primary);
 }
 
 .main-content {
-  background: #f5f7fb;
+  background: var(--bg);
   overflow-y: auto;
   padding: 0;
 }
@@ -297,8 +295,10 @@ function handleCommand(command) {
     height: 72px;
     margin: 0 auto 20px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
+    background: var(--accent-soft);
+    border: 1px solid rgba(201, 168, 106, 0.35);
+    color: var(--accent-bright);
+    font-family: var(--font-display);
     font-size: 28px;
     font-weight: 700;
     display: flex;
@@ -310,21 +310,21 @@ function handleCommand(command) {
     display: flex;
     justify-content: space-between;
     padding: 12px 4px;
-    border-bottom: 1px dashed var(--border);
+    border-bottom: 1px dashed var(--line-strong);
 
     &:last-child {
       border-bottom: none;
     }
 
     .label {
-      color: var(--text-secondary, #64748b);
+      color: var(--text-secondary);
       font-size: 14px;
     }
 
     .value {
       font-weight: 600;
       font-size: 14px;
-      color: var(--text-primary, #1e293b);
+      color: var(--text-primary);
       max-width: 220px;
       word-break: break-all;
       text-align: right;
@@ -343,54 +343,48 @@ function handleCommand(command) {
 }
 </style>
 
-<!-- 全局样式：解决浮层白字 -->
+<!-- 全局样式：侧边栏弹出菜单（暗色） -->
 <style lang="scss">
 .sidebar-menu-popup {
-  --el-menu-bg-color:            #ffffff !important;
-  --el-menu-text-color:          #000000 !important;
-  --el-menu-hover-bg-color:      #dbeafe !important;
-  --el-menu-hover-text-color:    #1e3a8a !important;
-  --el-menu-active-color:        #ffffff !important;
-  --el-menu-border-color:        #cbd5e1 !important;
+  --el-menu-bg-color:         #1B2536 !important;
+  --el-menu-text-color:       #C7CCD6 !important;
+  --el-menu-hover-bg-color:   rgba(201, 168, 106, 0.12) !important;
+  --el-menu-hover-text-color: #DCC189 !important;
+  --el-menu-active-color:     #DCC189 !important;
+  --el-menu-border-color:     #2A3548 !important;
 
-  background-color: #ffffff !important;
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 20px !important;
+  background-color: #1B2536 !important;
+  background: #1B2536 !important;
+  border: 1px solid #2A3548 !important;
+  border-radius: 12px !important;
   padding: 10px !important;
   min-width: 180px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2) !important;
-
-  *, *::before, *::after {
-    color: #000000 !important;
-  }
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5) !important;
 
   .el-menu,
   > .el-menu,
   > div > .el-menu {
-    background: #ffffff !important;
+    background: #1B2536 !important;
     border: none !important;
-    color: #000000 !important;
-    --el-menu-bg-color:     #ffffff !important;
-    --el-menu-text-color:   #000000 !important;
+    --el-menu-bg-color:   #1B2536 !important;
+    --el-menu-text-color: #C7CCD6 !important;
   }
 
   .el-menu-item,
   .el-sub-menu__title {
-    background: #ffffff !important;
-    color: #000000 !important;
-    font-weight: 700 !important;
+    background: transparent !important;
+    color: #C7CCD6 !important;
     font-size: 14px !important;
     height: 40px !important;
     line-height: 40px !important;
-    border-radius: 10px !important;
+    border-radius: 8px !important;
     padding: 0 16px !important;
     margin-bottom: 4px !important;
     text-indent: 0 !important;
     display: block !important;
 
     .el-icon {
-      color: #000000 !important;
+      color: #8B93A3 !important;
       margin-right: 10px !important;
       font-size: 16px !important;
     }
@@ -398,64 +392,32 @@ function handleCommand(command) {
     &:hover,
     &:focus-visible,
     &.is-hover {
-      background: #dbeafe !important;
-      color: #1e3a8a !important;
-      --el-menu-text-color: #1e3a8a !important;
-      .el-icon { color: #1e3a8a !important; }
+      background: rgba(201, 168, 106, 0.12) !important;
+      color: #DCC189 !important;
+      --el-menu-text-color: #DCC189 !important;
+      .el-icon { color: #DCC189 !important; }
     }
 
     &.is-active,
     &[aria-current='true'] {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-      color: #ffffff !important;
-      --el-menu-text-color: #ffffff !important;
-      --el-menu-active-color: #ffffff !important;
-      .el-icon { color: #ffffff !important; }
+      background: rgba(201, 168, 106, 0.18) !important;
+      color: #DCC189 !important;
+      --el-menu-text-color: #DCC189 !important;
+      --el-menu-active-color: #DCC189 !important;
+      font-weight: 600 !important;
+      .el-icon { color: #DCC189 !important; }
       &:hover {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        color: #ffffff !important;
+        background: rgba(201, 168, 106, 0.18) !important;
+        color: #DCC189 !important;
       }
     }
   }
 
   .el-popper__arrow::before,
   [class*='arrow']::before {
-    background-color: #ffffff !important;
-    background: #ffffff !important;
-    border-color: #cbd5e1 !important;
+    background-color: #1B2536 !important;
+    background: #1B2536 !important;
+    border-color: #2A3548 !important;
   }
-}
-
-html > body > div[role='tooltip'],
-html > body > div.el-tooltip__popper,
-html > body > div[class*='el-tooltip'],
-html > body > div[class*='el-popper'] {
-  --el-bg-color-overlay:      #ffffff !important;
-  --el-text-color-primary:    #000000 !important;
-  --el-color-white:           #000000 !important;
-  --el-text-color-regular:    #000000 !important;
-  color: #000000 !important;
-  background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-}
-
-html > body > div[role='tooltip'] *,
-html > body > div.el-tooltip__popper *,
-html > body > div[class*='el-tooltip'] *,
-html > body > div[class*='el-popper'] * {
-  color: #000000 !important;
-}
-
-html > body > div[role='tooltip'] .el-tooltip__inner,
-html > body > div.el-tooltip__popper .el-tooltip__inner {
-  background: #ffffff !important;
-  color: #000000 !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
-  padding: 8px 14px !important;
-  border-radius: 10px !important;
-  border: 1px solid #cbd5e1 !important;
-  box-shadow: none !important;
 }
 </style>

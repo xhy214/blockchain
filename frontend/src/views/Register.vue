@@ -1,15 +1,14 @@
 <template>
   <div class="auth-page">
     <div class="auth-bg">
-      <div class="bg-shape shape1"></div>
-      <div class="bg-shape shape2"></div>
+      <div class="bg-glow glow-gold"></div>
+      <div class="bg-glow glow-blue"></div>
     </div>
 
     <div class="auth-container">
       <div class="brand-side">
-        <div class="brand-logo">
-          <el-icon :size="48"><Headset /></el-icon>
-        </div>
+        <div class="vinyl brand-vinyl"></div>
+        <div class="staff-divider brand-divider"></div>
         <h1 class="brand-title">加入我们<br/>开始存证</h1>
         <p class="brand-desc">注册账号后，即可上传原创音乐作品进行区块链存证，并享受完整的版权保护服务</p>
       </div>
@@ -119,7 +118,7 @@ async function handleRegister() {
 <style lang="scss" scoped>
 .auth-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-deep);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -135,60 +134,76 @@ async function handleRegister() {
   pointer-events: none;
 }
 
-.bg-shape {
+.bg-glow {
   position: absolute;
   border-radius: 50%;
-  background: rgba(255,255,255,0.08);
+  filter: blur(80px);
 }
 
-.shape1 { width: 350px; height: 350px; top: -80px; right: -80px; }
-.shape2 { width: 250px; height: 250px; bottom: -40px; left: -40px; }
+.glow-gold {
+  width: 560px;
+  height: 560px;
+  top: -180px;
+  left: -120px;
+  background: rgba(201, 168, 106, 0.13);
+}
+
+.glow-blue {
+  width: 640px;
+  height: 640px;
+  bottom: -240px;
+  right: -160px;
+  background: rgba(62, 82, 118, 0.22);
+}
 
 .auth-container {
   position: relative;
   display: flex;
-  background: #fff;
-  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-panel);
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-  max-width: 860px;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.55);
+  max-width: 880px;
   width: 100%;
   min-height: 560px;
 }
 
 .brand-side {
   flex: 1;
-  background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
+  background: linear-gradient(160deg, #0C121E 0%, #101927 100%);
+  border-right: 1px solid var(--line);
   padding: 48px 40px;
-  color: #fff;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.brand-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
+.brand-vinyl {
+  width: 130px;
+  height: 130px;
   margin-bottom: 28px;
 }
 
+.brand-divider {
+  margin-bottom: 24px;
+}
+
 .brand-title {
-  font-size: 28px;
+  font-family: var(--font-display);
+  font-size: 27px;
   font-weight: 700;
-  line-height: 1.3;
-  margin-bottom: 16px;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  margin-bottom: 14px;
+  color: var(--text-primary);
 }
 
 .brand-desc {
-  font-size: 14px;
-  line-height: 1.7;
-  opacity: 0.85;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text-light);
 }
 
 .form-side {
@@ -203,13 +218,15 @@ async function handleRegister() {
   margin-bottom: 28px;
 
   h2 {
+    font-family: var(--font-display);
     font-size: 24px;
     font-weight: 700;
+    letter-spacing: 0.05em;
     margin-bottom: 8px;
   }
 
   p {
-    color: var(--text-secondary);
+    color: var(--text-light);
     font-size: 14px;
   }
 }
@@ -221,7 +238,8 @@ async function handleRegister() {
   font-weight: 600;
   background: var(--bg-gradient);
   border: none;
-  border-radius: 10px;
+  border-radius: var(--radius-control);
+  color: var(--on-accent);
   margin-top: 8px;
 }
 
@@ -229,10 +247,10 @@ async function handleRegister() {
   text-align: center;
   margin-top: 20px;
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--text-light);
 
   .link {
-    color: var(--primary);
+    color: var(--accent-bright);
     font-weight: 500;
     margin-left: 4px;
     &:hover { text-decoration: underline; }
@@ -244,7 +262,15 @@ async function handleRegister() {
     flex-direction: column;
     min-height: auto;
   }
-  .brand-side { padding: 32px 24px; }
+  .brand-side {
+    padding: 32px 24px;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand-vinyl {
+    width: 100px;
+    height: 100px;
+  }
   .form-side { padding: 32px 24px; }
 }
 </style>

@@ -2,10 +2,10 @@
   <div class="dashboard">
     <div class="dashboard-inner">
 
-      <!-- ============ 四个统计卡片（255x170，间距 120） ============ -->
+      <!-- ============ 四个统计卡片 ============ -->
       <div class="stat-cards-row">
         <div class="stat-card" @click="$router.push('/works')">
-          <div class="stat-icon-wrap icon-1">
+          <div class="stat-icon-wrap">
             <el-icon :size="36"><Folder /></el-icon>
           </div>
           <div class="stat-info">
@@ -15,7 +15,7 @@
         </div>
 
         <div class="stat-card" @click="$router.push('/licenses/my')">
-          <div class="stat-icon-wrap icon-2">
+          <div class="stat-icon-wrap">
             <el-icon :size="36"><Key /></el-icon>
           </div>
           <div class="stat-info">
@@ -25,7 +25,7 @@
         </div>
 
         <div class="stat-card" @click="$router.push('/works/search')">
-          <div class="stat-icon-wrap icon-3">
+          <div class="stat-icon-wrap">
             <el-icon :size="36"><Search /></el-icon>
           </div>
           <div class="stat-info">
@@ -35,7 +35,7 @@
         </div>
 
         <div class="stat-card" @click="$router.push('/disputes')">
-          <div class="stat-icon-wrap icon-4">
+          <div class="stat-icon-wrap">
             <el-icon :size="36"><Warning /></el-icon>
           </div>
           <div class="stat-info">
@@ -52,7 +52,7 @@
         <div class="main-panel">
           <div class="panel-header">
             <div class="panel-title">
-              <el-icon :size="24"><Files /></el-icon>
+              <div class="mini-vinyl vinyl"></div>
               最近存证的作品
             </div>
             <div class="panel-actions">
@@ -65,7 +65,7 @@
 
           <div class="panel-body" v-loading="loadingWorks">
             <div v-if="recentWorks.length === 0 && !loadingWorks" class="empty-state">
-              <el-icon :size="48" color="#cbd5e1"><Folder /></el-icon>
+              <el-icon :size="48" color="#6E7889"><Folder /></el-icon>
               <p>暂无存证作品</p>
               <el-button type="primary" @click="$router.push('/works/register')">立即存证</el-button>
             </div>
@@ -107,7 +107,7 @@
         <!-- 右侧面板组 -->
         <div class="right-panels">
 
-          <!-- 使用提示 500x400 -->
+          <!-- 使用提示 -->
           <div class="side-panel tips-panel">
             <div class="panel-header">
               <div class="panel-title">
@@ -118,26 +118,26 @@
             <div class="panel-body">
               <div class="tip-list">
                 <div class="tip-item">
-                  <div class="tip-step step-1">步骤 1</div>
+                  <div class="tip-step">步骤 1</div>
                   <div class="tip-text">上传音频文件进行版权存证，获取区块链唯一存证编号</div>
                 </div>
                 <div class="tip-item">
-                  <div class="tip-step step-2">步骤 2</div>
+                  <div class="tip-step">步骤 2</div>
                   <div class="tip-text">向他人发放授权，设置授权类型、有效期和使用次数</div>
                 </div>
                 <div class="tip-item">
-                  <div class="tip-step step-3">步骤 3</div>
+                  <div class="tip-step">步骤 3</div>
                   <div class="tip-text">播放前核验授权有效性，保障版权合规使用</div>
                 </div>
                 <div class="tip-item">
-                  <div class="tip-step step-4">步骤 4</div>
+                  <div class="tip-step">步骤 4</div>
                   <div class="tip-text">随时生成存证证书，作为版权归属的法律凭证</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- 快速操作 500 宽 -->
+          <!-- 快速操作 -->
           <div class="side-panel quick-panel">
             <div class="panel-header">
               <div class="panel-title">
@@ -148,25 +148,25 @@
             <div class="panel-body">
               <div class="quick-grid">
                 <div class="quick-btn" @click="$router.push('/works/register')">
-                  <div class="quick-icon q-icon-1">
+                  <div class="quick-icon">
                     <el-icon :size="28"><DocumentAdd /></el-icon>
                   </div>
                   <div class="quick-label">版权存证</div>
                 </div>
                 <div class="quick-btn" @click="$router.push('/licenses/grant')">
-                  <div class="quick-icon q-icon-2">
+                  <div class="quick-icon">
                     <el-icon :size="28"><Tickets /></el-icon>
                   </div>
                   <div class="quick-label">发放授权</div>
                 </div>
                 <div class="quick-btn" @click="$router.push('/licenses/verify')">
-                  <div class="quick-icon q-icon-3">
+                  <div class="quick-icon">
                     <el-icon :size="28"><CircleCheck /></el-icon>
                   </div>
                   <div class="quick-label">授权核验</div>
                 </div>
                 <div class="quick-btn" @click="$router.push('/works/search')">
-                  <div class="quick-icon q-icon-4">
+                  <div class="quick-icon">
                     <el-icon :size="28"><Search /></el-icon>
                   </div>
                   <div class="quick-label">作品搜索</div>
@@ -249,14 +249,14 @@ function formatTime(t) {
 
 function getCoverGradient(genre) {
   const map = {
-    '古典': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    '流行': 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-    '摇滚': 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-    '电子': 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-    '民谣': 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-    '爵士': 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)'
+    '古典': 'linear-gradient(135deg, #C9A86A 0%, #8A6A33 100%)',
+    '流行': 'linear-gradient(135deg, #6E5A7E 0%, #3E3452 100%)',
+    '摇滚': 'linear-gradient(135deg, #8A4A4A 0%, #4E2A2E 100%)',
+    '电子': 'linear-gradient(135deg, #3E6E8A 0%, #24404E 100%)',
+    '民谣': 'linear-gradient(135deg, #5E7E58 0%, #334632 100%)',
+    '爵士': 'linear-gradient(135deg, #8A6A4A 0%, #4A3826 100%)'
   }
-  return map[genre] || 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)'
+  return map[genre] || 'linear-gradient(135deg, #4A5A78 0%, #28324A 100%)'
 }
 </script>
 
@@ -268,7 +268,7 @@ function getCoverGradient(genre) {
 .dashboard {
   height: calc(100vh - 80px);
   width: 100%;
-  background: #f5f7fb;
+  background: var(--bg);
   overflow: hidden;
 }
 
@@ -295,36 +295,35 @@ function getCoverGradient(genre) {
 .stat-card {
   width: 255px;
   height: 170px;
-  background: #ffffff;
-  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
   padding: 24px;
   display: flex;
   align-items: center;
   gap: 20px;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.18);
+    border-color: rgba(201, 168, 106, 0.4);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(201, 168, 106, 0.12);
   }
 }
 
 .stat-icon-wrap {
   width: 72px;
   height: 72px;
-  border-radius: 20px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
   flex-shrink: 0;
-
-  &.icon-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-  &.icon-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-  &.icon-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-  &.icon-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+  background: var(--accent-soft);
+  border: 1px solid rgba(201, 168, 106, 0.28);
+  color: var(--accent-bright);
 }
 
 .stat-info {
@@ -335,15 +334,16 @@ function getCoverGradient(genre) {
 }
 
 .stat-value {
-  font-size: 44px;
+  font-family: var(--font-display);
+  font-size: 46px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
   line-height: 1;
 }
 
 .stat-label {
   font-size: 15px;
-  color: #64748b;
+  color: var(--text-light);
   font-weight: 500;
 }
 
@@ -361,9 +361,10 @@ function getCoverGradient(genre) {
   width: 1500px;
   height: 100%;
   margin-left: -60px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -375,17 +376,26 @@ function getCoverGradient(genre) {
   align-items: center;
   justify-content: space-between;
   padding: 24px 28px;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid var(--line);
   flex-shrink: 0;
 }
 
 .panel-title {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  font-family: var(--font-display);
   font-size: 18px;
   font-weight: 700;
-  color: #1e293b;
+  letter-spacing: 0.03em;
+  color: var(--text-primary);
+}
+
+.mini-vinyl {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 .panel-actions {
@@ -408,7 +418,7 @@ function getCoverGradient(genre) {
   justify-content: center;
   padding: 60px 0;
   gap: 12px;
-  color: #94a3b8;
+  color: var(--text-light);
 
   p {
     font-size: 15px;
@@ -428,24 +438,26 @@ function getCoverGradient(genre) {
   align-items: center;
   gap: 20px;
   padding: 16px 20px;
-  background: #f8fafc;
-  border-radius: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s;
 
   &:hover {
-    background: #f1f5f9;
+    background: #1D2739;
+    border-color: var(--line-strong);
   }
 }
 
 .work-cover {
   width: 64px;
   height: 64px;
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.9);
   flex-shrink: 0;
 }
 
@@ -457,7 +469,7 @@ function getCoverGradient(genre) {
 .work-title {
   font-size: 17px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
   margin-bottom: 6px;
   white-space: nowrap;
   overflow: hidden;
@@ -469,14 +481,14 @@ function getCoverGradient(genre) {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-light);
 
   .dot {
     display: inline-block;
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: #cbd5e1;
+    background: var(--line-strong);
   }
 }
 
@@ -486,14 +498,14 @@ function getCoverGradient(genre) {
 
 .work-time {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-light);
   flex-shrink: 0;
   min-width: 140px;
   text-align: right;
 }
 
 .work-arrow {
-  color: #cbd5e1;
+  color: var(--text-light);
   flex-shrink: 0;
 }
 
@@ -509,9 +521,10 @@ function getCoverGradient(genre) {
 }
 
 .side-panel {
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -548,30 +561,27 @@ function getCoverGradient(genre) {
   flex-direction: column;
   gap: 8px;
   padding: 12px 18px;
-  border-left: 3px solid #e2e8f0;
-  border-radius: 0 12px 12px 0;
-  background: #f8fafc;
+  border-left: 3px solid var(--line-strong);
+  border-radius: 0 8px 8px 0;
+  background: var(--surface-2);
   flex: 1;
 
-  &:nth-child(1) { border-left-color: #667eea; }
-  &:nth-child(2) { border-left-color: #43e97b; }
-  &:nth-child(3) { border-left-color: #f5576c; }
-  &:nth-child(4) { border-left-color: #4facfe; }
+  &:nth-child(1) { border-left-color: rgba(201, 168, 106, 0.9); }
+  &:nth-child(2) { border-left-color: rgba(201, 168, 106, 0.65); }
+  &:nth-child(3) { border-left-color: rgba(201, 168, 106, 0.45); }
+  &:nth-child(4) { border-left-color: rgba(201, 168, 106, 0.3); }
 }
 
 .tip-step {
   font-size: 13px;
   font-weight: 700;
-
-  &.step-1 { color: #667eea; }
-  &.step-2 { color: #43e97b; }
-  &.step-3 { color: #f5576c; }
-  &.step-4 { color: #4facfe; }
+  color: var(--accent-bright);
+  letter-spacing: 0.08em;
 }
 
 .tip-text {
   font-size: 14px;
-  color: #475569;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
@@ -607,13 +617,15 @@ function getCoverGradient(genre) {
   align-items: center;
   gap: 14px;
   padding: 18px 20px;
-  background: #f8fafc;
-  border-radius: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
 
   &:hover {
-    background: #f1f5f9;
+    background: #1D2739;
+    border-color: rgba(201, 168, 106, 0.35);
     transform: translateY(-2px);
   }
 }
@@ -621,22 +633,19 @@ function getCoverGradient(genre) {
 .quick-icon {
   width: 52px;
   height: 52px;
-  border-radius: 16px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
   flex-shrink: 0;
-
-  &.q-icon-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-  &.q-icon-2 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-  &.q-icon-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-  &.q-icon-4 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+  background: var(--accent-soft);
+  border: 1px solid rgba(201, 168, 106, 0.28);
+  color: var(--accent-bright);
 }
 
 .quick-label {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 </style>

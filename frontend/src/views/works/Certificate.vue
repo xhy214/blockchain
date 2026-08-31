@@ -139,8 +139,31 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
 <style lang="scss" scoped>
 .certificate-preview {
   padding: 32px;
-  background: linear-gradient(180deg, #fefce8 0%, #fff 30%);
+  background: linear-gradient(180deg, #F7F2E4 0%, #FBF8EF 30%);
+  border: 1px solid #D8C79A;
   border-radius: 16px;
+
+  :deep(.el-descriptions__label) {
+    color: #6B5F49;
+    background: #F1E9D4;
+  }
+
+  :deep(.el-descriptions__content) {
+    color: #3A3226;
+  }
+
+  :deep(.el-descriptions__cell) {
+    border-color: #D8C79A;
+    background: transparent;
+  }
+
+  :deep(.el-divider--horizontal) {
+    --el-border-color: #D8C79A;
+  }
+
+  code {
+    color: #7A5A1E;
+  }
 }
 
 .cert-header { text-align: center; margin-bottom: 16px; }
@@ -149,22 +172,22 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   height: 64px;
   margin: 0 auto 12px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--on-accent);
 }
 
-.cert-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; color: #92400e; }
-.cert-subtitle { color: var(--text-secondary); font-size: 13px; }
+.cert-header h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px; color: #7A5A1E; }
+.cert-subtitle { color: #6B5F49; font-size: 13px; }
 
 .cert-hash {
   font-family: monospace;
   word-break: break-all;
   font-size: 12px;
-  color: var(--text-primary);
-  background: #f8fafc;
+  color: #3A3226;
+  background: #EFE8D2;
   padding: 4px 8px;
   border-radius: 6px;
 }
@@ -183,7 +206,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   .stamp-ring {
     width: 100px;
     height: 100px;
-    border: 3px solid #ef4444;
+    border: 3px solid #B03A2E;
     border-radius: 50%;
     opacity: 0.6;
     position: absolute;
@@ -199,7 +222,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
     height: 100px;
     width: 100%;
     font-weight: 700;
-    color: #ef4444;
+    color: #B03A2E;
     font-size: 13px;
     z-index: 1;
   }
@@ -207,7 +230,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
 
 .cert-notice {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: #6B5F49;
   line-height: 1.8;
 }
 

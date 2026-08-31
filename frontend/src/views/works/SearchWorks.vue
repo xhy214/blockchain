@@ -48,7 +48,7 @@
             >
               <div class="work-card" @click="$router.push(`/works/${work.workID}`)">
                 <div class="work-cover">
-                  <el-icon :size="40" color="#fff"><Headset /></el-icon>
+                  <el-icon :size="40" color="#221A0D"><Headset /></el-icon>
                 </div>
                 <div class="work-info">
                   <h3 class="work-title" :title="work.title">{{ work.title }}</h3>
@@ -115,8 +115,8 @@ function statusLabel(s) { return { ACTIVE: '正常', TRANSFERRED: '已转让', D
 
 <style lang="scss" scoped>
 .work-card {
-  background: #fff;
-  border-radius: 20px;
+  background: var(--surface);
+  border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--border);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -125,13 +125,13 @@ function statusLabel(s) { return { ACTIVE: '正常', TRANSFERRED: '已转让', D
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45);
   }
 }
 
 .work-cover {
   height: 120px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-gradient);
   display: flex;
   align-items: center;
   justify-content: center;

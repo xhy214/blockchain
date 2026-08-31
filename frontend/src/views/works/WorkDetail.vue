@@ -21,7 +21,7 @@
               <div class="panel-body">
                 <div class="info-header">
                   <div class="work-cover">
-                    <el-icon :size="48" color="#fff"><Headset /></el-icon>
+                    <el-icon :size="48" color="#221A0D"><Headset /></el-icon>
                   </div>
                   <div class="work-info">
                     <h2>{{ work.title }}</h2>
@@ -218,8 +218,8 @@ function copyHash() {
 .work-cover {
   width: 100px;
   height: 100px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  background: var(--bg-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,14 +242,14 @@ function copyHash() {
   font-family: monospace;
   word-break: break-all;
   font-size: 13px;
-  background: #f1f5f9;
+  background: var(--surface-2);
   padding: 6px 10px;
   border-radius: 8px;
   display: inline-block;
 }
 
 .history-data {
-  background: #f8fafc;
+  background: var(--surface-2);
   padding: 8px 12px;
   border-radius: 10px;
   font-size: 12px;
@@ -264,7 +264,7 @@ function copyHash() {
   border: 1px solid var(--border);
   border-radius: 12px;
   margin-bottom: 12px;
-  background: #f8fafc;
+  background: var(--surface-2);
 }
 
 .license-header {

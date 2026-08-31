@@ -52,7 +52,7 @@
 
                 <el-form-item label="使用次数" prop="maxUsage">
                   <el-input-number v-model="form.maxUsage" :min="0" :max="9999" />
-                  <span style="margin-left: 12px; color: #64748b; font-size: 13px;">次（0 表示不限次）</span>
+                  <span style="margin-left: 12px; color: var(--text-secondary); font-size: 13px;">次（0 表示不限次）</span>
                 </el-form-item>
 
                 <el-form-item>
@@ -162,6 +162,6 @@ async function handleSubmit() {
   padding-left: 20px;
   line-height: 1.8;
   font-size: 14px;
-  color: #64748b;
+  color: var(--text-secondary);
 }
 </style>

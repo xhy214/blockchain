@@ -28,7 +28,7 @@
 
           <template v-if="works.length === 0 && !loading">
             <div class="empty-state">
-              <el-icon :size="48" color="#cbd5e1"><Folder /></el-icon>
+              <el-icon :size="48" color="#6E7889"><Folder /></el-icon>
               <p>暂无作品，快去存证你的第一个作品吧！</p>
               <el-button type="primary" class="btn-gradient" @click="$router.push('/works/register')">立即存证</el-button>
             </div>
@@ -123,8 +123,8 @@ function statusTagType(s) { return { ACTIVE: 'success', TRANSFERRED: 'info', DIS
 function statusLabel(s) { return { ACTIVE: '正常', TRANSFERRED: '已转让', DISPUTED: '争议中' }[s] || s }
 function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('zh-CN') }
 function getCoverGradient(genre) {
-  const m = { '古典': 'linear-gradient(135deg, #667eea, #764ba2)', '流行': 'linear-gradient(135deg, #f093fb, #f5576c)', '摇滚': 'linear-gradient(135deg, #fa709a, #fee140)', '电子': 'linear-gradient(135deg, #4facfe, #00f2fe)', '民谣': 'linear-gradient(135deg, #43e97b, #38f9d7)' }
-  return m[genre] || 'linear-gradient(135deg, #a8edea, #fed6e3)'
+  const m = { '古典': 'linear-gradient(135deg, #C9A86A, #8A6A33)', '流行': 'linear-gradient(135deg, #6E5A7E, #3E3452)', '摇滚': 'linear-gradient(135deg, #8A4A4A, #4E2A2E)', '电子': 'linear-gradient(135deg, #3E6E8A, #24404E)', '民谣': 'linear-gradient(135deg, #5E7E58, #334632)', '爵士': 'linear-gradient(135deg, #8A6A4A, #4A3826)' }
+  return m[genre] || 'linear-gradient(135deg, #4A5A78, #28324A)'
 }
 </script>
 
@@ -142,7 +142,7 @@ function getCoverGradient(genre) {
   cursor: pointer;
 
   &:hover .work-cell-title {
-    color: #667eea;
+    color: var(--accent-bright);
   }
 }
 
@@ -160,12 +160,12 @@ function getCoverGradient(genre) {
 .work-cell-title {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .work-cell-sub {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-light);
   margin-top: 2px;
 }
 

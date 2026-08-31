@@ -65,7 +65,7 @@
                       <p class="upload-hint">支持 MP3、WAV、FLAC 等格式，文件仅用于计算 Hash 存证，不会上传到服务器</p>
                     </div>
                     <div v-else class="upload-selected">
-                      <el-icon :size="32" color="#667eea"><Headset /></el-icon>
+                      <el-icon :size="32" color="#DCC189"><Headset /></el-icon>
                       <div class="file-info">
                         <div class="file-name">{{ fileInfo.name }}</div>
                         <div class="file-size">{{ formatFileSize(fileInfo.size) }}</div>
@@ -219,26 +219,26 @@ function formatFileSize(bytes) {
 
 .upload-placeholder {
   .upload-icon {
-    color: #667eea;
+    color: var(--accent-bright);
     margin-bottom: 12px;
   }
 
   .upload-text {
     font-size: 16px;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text-primary);
     margin-bottom: 6px;
   }
 
   .upload-hint {
     font-size: 12px;
-    color: #94a3b8;
+    color: var(--text-light);
   }
 }
 
 .file-info { flex: 1; min-width: 0; }
 .file-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.file-size { font-size: 12px; color: #64748b; }
+.file-size { font-size: 12px; color: var(--text-secondary); }
 
 .steps {
   :deep(.el-step__title) {

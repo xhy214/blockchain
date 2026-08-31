@@ -374,7 +374,7 @@ function handleCommand(command) {
   .el-sub-menu__title {
     background: transparent !important;
     color: #C7CCD6 !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
     height: 40px !important;
     line-height: 40px !important;
     border-radius: 8px !important;

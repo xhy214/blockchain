@@ -163,7 +163,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
 </script>
 
 <style lang="scss" scoped>
-.form-tip { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+.form-tip { font-size: 13px; color: var(--text-light); margin-top: 4px; }
 .tips-list { padding-left: 20px; line-height: 1.8; font-size: 14px; color: var(--text-secondary); }
 
 .dispute-item {
@@ -181,6 +181,6 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   margin-bottom: 6px;
 }
 
-.dispute-time { font-size: 12px; color: var(--text-light); }
-.dispute-evidence { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
+.dispute-time { font-size: 13px; color: var(--text-light); }
+.dispute-evidence { font-size: 14px; color: var(--text-primary); line-height: 1.5; }
 </style>

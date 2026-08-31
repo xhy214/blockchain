@@ -201,7 +201,7 @@ async function handleRegister() {
 }
 
 .brand-desc {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.8;
   color: var(--text-light);
 }

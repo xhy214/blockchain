@@ -231,14 +231,14 @@ function formatFileSize(bytes) {
   }
 
   .upload-hint {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-light);
   }
 }
 
 .file-info { flex: 1; min-width: 0; }
 .file-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.file-size { font-size: 12px; color: var(--text-secondary); }
+.file-size { font-size: 13px; color: var(--text-secondary); }
 
 .steps {
   :deep(.el-step__title) {

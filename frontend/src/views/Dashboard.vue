@@ -56,10 +56,10 @@
               最近存证的作品
             </div>
             <div class="panel-actions">
-              <el-button type="primary" round @click="$router.push('/works/register')">
+              <el-button type="primary" round size="large" @click="$router.push('/works/register')">
                 <el-icon><DocumentAdd /></el-icon>&nbsp;新建存证
               </el-button>
-              <el-button round @click="$router.push('/works')">查看全部</el-button>
+              <el-button round size="large" @click="$router.push('/works')">查看全部</el-button>
             </div>
           </div>
 
@@ -212,7 +212,7 @@ function formatTime(t) {
 function getCoverGradient(genre) {
   const map = {
     '古典': 'linear-gradient(135deg, #C9A86A 0%, #8A6A33 100%)',
-    '流行': 'linear-gradient(135deg, #6E5A7E 0%, #3E3452 100%)',
+    '流行': 'linear-gradient(135deg, #8A5E68 0%, #4A3840 100%)',
     '摇滚': 'linear-gradient(135deg, #8A4A4A 0%, #4E2A2E 100%)',
     '电子': 'linear-gradient(135deg, #3E6E8A 0%, #24404E 100%)',
     '民谣': 'linear-gradient(135deg, #5E7E58 0%, #334632 100%)',
@@ -249,7 +249,8 @@ function getCoverGradient(genre) {
 /* ============ 统计卡片行 ============ */
 .stat-cards-row {
   display: flex;
-  gap: 120px;
+  /* 4×255 + 3×140 = 1440，与主面板右缘(1560)对齐 */
+  gap: 140px;
   margin-bottom: 40px;
   flex-shrink: 0;
 }
@@ -296,15 +297,17 @@ function getCoverGradient(genre) {
 }
 
 .stat-value {
-  font-family: var(--font-display);
-  font-size: 46px;
+  /* 数字用无衬线 + tabular-nums：衬线展示体的 "0" 与字母 O 无法区分，辨识度差 */
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
+  font-size: 44px;
   font-weight: 700;
   color: var(--text-primary);
   line-height: 1;
 }
 
 .stat-label {
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-light);
   font-weight: 500;
 }
@@ -383,7 +386,7 @@ function getCoverGradient(genre) {
   color: var(--text-light);
 
   p {
-    font-size: 15px;
+    font-size: 16px;
     margin: 0;
   }
 }
@@ -429,7 +432,7 @@ function getCoverGradient(genre) {
 }
 
 .work-title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 6px;
@@ -442,7 +445,7 @@ function getCoverGradient(genre) {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-light);
 
   .dot {
@@ -459,7 +462,7 @@ function getCoverGradient(genre) {
 }
 
 .work-time {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-light);
   flex-shrink: 0;
   min-width: 140px;
@@ -474,7 +477,8 @@ function getCoverGradient(genre) {
 /* ============ 右侧面板组 ============ */
 .right-panels {
   width: 500px;
-  height: 100%;
+  /* 上移 210px 与统计卡并排，高度补回 210px，使底部与主面板对齐 */
+  height: calc(100% + 210px);
   margin-top: -210px;
   margin-right: 60px;
   display: flex;
@@ -513,8 +517,7 @@ function getCoverGradient(genre) {
 .tip-list {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  gap: 24px;
+  gap: 16px;
   padding: 12px 4px;
   flex: 1;
 }
@@ -522,6 +525,7 @@ function getCoverGradient(genre) {
 .tip-item {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 8px;
   padding: 12px 18px;
   border-left: 3px solid var(--line-strong);

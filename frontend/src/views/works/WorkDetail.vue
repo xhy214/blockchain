@@ -241,7 +241,7 @@ function copyHash() {
 .hash {
   font-family: monospace;
   word-break: break-all;
-  font-size: 13px;
+  font-size: 14px;
   background: var(--surface-2);
   padding: 6px 10px;
   border-radius: 8px;
@@ -252,7 +252,7 @@ function copyHash() {
   background: var(--surface-2);
   padding: 8px 12px;
   border-radius: 10px;
-  font-size: 12px;
+  font-size: 13px;
   margin-top: 8px;
   overflow-x: auto;
 }
@@ -275,5 +275,5 @@ function copyHash() {
 }
 
 .license-type { font-weight: 600; }
-.license-detail p { font-size: 13px; margin: 4px 0; color: var(--text-secondary); }
+.license-detail p { font-size: 14px; margin: 4px 0; color: var(--text-secondary); }
 </style>

@@ -68,7 +68,7 @@
             <el-button class="btn-gradient" size="large" :loading="downloading" @click="handleDownload" style="width: 100%; height: 48px; font-size: 16px;">
               <el-icon :size="20"><Download /></el-icon>&nbsp;下载 PDF 证书
             </el-button>
-            <p style="margin-top: 12px; font-size: 14px; color: var(--text-secondary);">
+            <p style="margin-top: 12px; font-size: 15px; color: var(--text-secondary);">
               证书包含完整的链上存证信息，可作为版权证明材料
             </p>
           </div>
@@ -191,7 +191,7 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
 .cert-hash {
   font-family: monospace;
   word-break: break-all;
-  font-size: 13px;
+  font-size: 14px;
   color: #3A3226;
   background: #EFE8D2;
   padding: 4px 8px;
@@ -240,5 +240,5 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   line-height: 1.8;
 }
 
-.cert-tips { padding-left: 20px; line-height: 1.8; font-size: 14px; color: var(--text-secondary); }
+.cert-tips { padding-left: 20px; line-height: 1.8; font-size: 15px; color: var(--text-secondary); }
 </style>

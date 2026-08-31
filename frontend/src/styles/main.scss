@@ -25,6 +25,9 @@
   --warning: #D9A05B;
   --danger: #D96B5B;
 
+  /* Element 全局基准字号：默认 14px 偏小，全站抬到 15px（按钮/输入框/菜单等引用） */
+  --el-font-size-base: 15px;
+
   /* 兼容旧变量名（视图内 var() 引用） */
   --primary: #C9A86A;
   --primary-dark: #A8823F;
@@ -300,11 +303,11 @@ a {
 
 .el-table th.el-table__cell {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .el-table td.el-table__cell {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .el-form-item__label {
@@ -323,14 +326,20 @@ a {
 .el-tag {
   border-radius: 999px;
   font-weight: 500;
+  font-size: 13px;
 }
 
 .el-button {
   border-radius: var(--radius-control);
+  font-size: 15px;
+}
+
+.el-button--small {
+  font-size: 13px;
 }
 
 .el-steps {
-  --el-step-title-font-size: 14px;
+  --el-step-title-font-size: 15px;
 }
 
 .el-timeline-item__node {
@@ -387,7 +396,7 @@ code {
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;

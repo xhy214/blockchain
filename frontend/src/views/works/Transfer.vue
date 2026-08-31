@@ -133,6 +133,6 @@ async function handleSubmit() {
 </script>
 
 <style lang="scss" scoped>
-.form-tip { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+.form-tip { font-size: 13px; color: var(--text-light); margin-top: 4px; }
 .rules-list { padding-left: 20px; line-height: 1.8; font-size: 14px; color: var(--text-secondary); }
 </style>

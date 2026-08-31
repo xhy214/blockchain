@@ -151,7 +151,7 @@ function statusLabel(s) { return { ACTIVE: '正常', TRANSFERRED: '已转让', D
 }
 
 .work-artist {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-secondary);
   margin-bottom: 10px;
 }

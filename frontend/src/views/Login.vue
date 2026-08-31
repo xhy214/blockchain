@@ -182,7 +182,7 @@ async function handleLogin() {
 }
 
 .brand-desc {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.8;
   color: var(--text-light);
   margin-bottom: 28px;
@@ -198,7 +198,7 @@ async function handleLogin() {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-secondary);
   letter-spacing: 0.06em;
 

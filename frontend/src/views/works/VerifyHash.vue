@@ -190,7 +190,7 @@ function formatFileSize(bytes) {
 </script>
 
 <style lang="scss" scoped>
-.form-tip { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+.form-tip { font-size: 13px; color: var(--text-light); margin-top: 4px; }
 
 .upload-area { width: 100%; }
 
@@ -209,7 +209,7 @@ function formatFileSize(bytes) {
 
   .upload-icon { color: var(--primary); margin-bottom: 12px; }
   .upload-text { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-  .upload-hint { font-size: 12px; color: var(--text-light); }
+  .upload-hint { font-size: 13px; color: var(--text-light); }
 }
 
 .upload-selected {
@@ -224,14 +224,14 @@ function formatFileSize(bytes) {
 
 .file-info { flex: 1; min-width: 0; }
 .file-name { font-weight: 500; }
-.file-size { font-size: 12px; color: var(--text-secondary); }
+.file-size { font-size: 13px; color: var(--text-secondary); }
 
 .hash-display {
   margin-top: 14px;
   padding: 12px 16px;
   background: var(--surface-2);
   border-radius: 12px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
   display: flex;
   align-items: center;
@@ -267,7 +267,7 @@ function formatFileSize(bytes) {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    font-size: 12px;
+    font-size: 13px;
     margin-bottom: 6px;
   }
   .hash-label { color: var(--text-secondary); flex-shrink: 0; }

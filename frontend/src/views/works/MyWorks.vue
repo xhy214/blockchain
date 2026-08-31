@@ -164,7 +164,7 @@ function getCoverGradient(genre) {
 }
 
 .work-cell-sub {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-light);
   margin-top: 2px;
 }

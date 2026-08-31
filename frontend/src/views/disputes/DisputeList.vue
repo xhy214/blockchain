@@ -104,7 +104,7 @@ function formatTime(t) {
 }
 
 .dispute-id code {
-  font-size: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
 }
 </style>

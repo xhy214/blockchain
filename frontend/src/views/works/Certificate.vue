@@ -68,7 +68,7 @@
             <el-button class="btn-gradient" size="large" :loading="downloading" @click="handleDownload" style="width: 100%; height: 48px; font-size: 16px;">
               <el-icon :size="20"><Download /></el-icon>&nbsp;下载 PDF 证书
             </el-button>
-            <p style="margin-top: 12px; font-size: 13px; color: var(--text-secondary);">
+            <p style="margin-top: 12px; font-size: 14px; color: var(--text-secondary);">
               证书包含完整的链上存证信息，可作为版权证明材料
             </p>
           </div>
@@ -143,18 +143,24 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
   border: 1px solid #D8C79A;
   border-radius: 16px;
 
+  /* 纸面作用域内重映射深色变量：CSS 变量就近继承，压过全局 html.dark 的 Element 覆盖 */
+  --el-fill-color-blank: #FBF8EF;
+  --el-fill-color-light: #F1E9D4;
+  --el-text-color-primary: #3A3226;
+  --el-border-color-lighter: #D8C79A;
+
+  :deep(.el-descriptions) {
+    --el-descriptions-table-border: 1px solid #D8C79A;
+  }
+
   :deep(.el-descriptions__label) {
-    color: #6B5F49;
+    color: #7A5A1E;
+    font-weight: 600;
     background: #F1E9D4;
   }
 
-  :deep(.el-descriptions__content) {
-    color: #3A3226;
-  }
-
-  :deep(.el-descriptions__cell) {
-    border-color: #D8C79A;
-    background: transparent;
+  :deep(.el-descriptions__body .el-descriptions__table .el-descriptions__cell) {
+    font-size: 15px;
   }
 
   :deep(.el-divider--horizontal) {
@@ -180,12 +186,12 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
 }
 
 .cert-header h2 { font-family: var(--font-display); font-size: 22px; font-weight: 700; letter-spacing: 0.06em; margin-bottom: 4px; color: #7A5A1E; }
-.cert-subtitle { color: #6B5F49; font-size: 13px; }
+.cert-subtitle { color: #6B5F49; font-size: 14px; }
 
 .cert-hash {
   font-family: monospace;
   word-break: break-all;
-  font-size: 12px;
+  font-size: 13px;
   color: #3A3226;
   background: #EFE8D2;
   padding: 4px 8px;
@@ -223,13 +229,13 @@ function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('
     width: 100%;
     font-weight: 700;
     color: #B03A2E;
-    font-size: 13px;
+    font-size: 14px;
     z-index: 1;
   }
 }
 
 .cert-notice {
-  font-size: 12px;
+  font-size: 14px;
   color: #6B5F49;
   line-height: 1.8;
 }

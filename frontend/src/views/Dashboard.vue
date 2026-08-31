@@ -249,8 +249,9 @@ function getCoverGradient(genre) {
 /* ============ 统计卡片行 ============ */
 .stat-cards-row {
   display: flex;
-  /* 4×255 + 3×140 = 1440，与主面板右缘(1560)对齐 */
-  gap: 140px;
+  /* 与主面板左缘对齐(-60)，4×255 + 3×160 = 1500，右缘同达 1560 */
+  margin-left: -60px;
+  gap: 160px;
   margin-bottom: 40px;
   flex-shrink: 0;
 }
@@ -307,8 +308,8 @@ function getCoverGradient(genre) {
 }
 
 .stat-label {
-  font-size: 16px;
-  color: var(--text-light);
+  font-size: 20px;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -350,7 +351,8 @@ function getCoverGradient(genre) {
   align-items: center;
   gap: 12px;
   font-family: var(--font-display);
-  font-size: 18px;
+  /* 19×zoom(≈0.8)≈15px，与侧栏一级菜单等大 */
+  font-size: 19px;
   font-weight: 700;
   letter-spacing: 0.03em;
   color: var(--text-primary);
@@ -366,6 +368,13 @@ function getCoverGradient(genre) {
 .panel-actions {
   display: flex;
   gap: 12px;
+
+  .el-button {
+    /* 与统计卡标签(stat-label 20px)同大，按钮同步加高 */
+    font-size: 20px;
+    height: 48px;
+    padding: 0 24px;
+  }
 }
 
 .panel-body {
@@ -431,8 +440,9 @@ function getCoverGradient(genre) {
   min-width: 0;
 }
 
+/* 工作台有 ~0.8 的 zoom 缩放，字号需按 1/0.8 预算放大才能与其他页面观感一致 */
 .work-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 6px;
@@ -445,8 +455,8 @@ function getCoverGradient(genre) {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  color: var(--text-light);
+  font-size: 18px;
+  color: var(--text-secondary);
 
   .dot {
     display: inline-block;
@@ -459,13 +469,17 @@ function getCoverGradient(genre) {
 
 .work-status {
   flex-shrink: 0;
+
+  :deep(.el-tag) {
+    font-size: 15px;
+  }
 }
 
 .work-time {
-  font-size: 14px;
-  color: var(--text-light);
+  font-size: 18px;
+  color: var(--text-secondary);
   flex-shrink: 0;
-  min-width: 140px;
+  min-width: 180px;
   text-align: right;
 }
 
@@ -508,10 +522,6 @@ function getCoverGradient(genre) {
     flex-direction: column;
     overflow: hidden;
   }
-
-  .panel-title {
-    font-size: 20px;
-  }
 }
 
 .tip-list {
@@ -540,14 +550,14 @@ function getCoverGradient(genre) {
 }
 
 .tip-step {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--accent-bright);
   letter-spacing: 0.08em;
 }
 
 .tip-text {
-  font-size: 20px;
+  font-size: 22px;
   color: var(--text-secondary);
   line-height: 1.7;
 }

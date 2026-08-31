@@ -137,44 +137,6 @@
             </div>
           </div>
 
-          <!-- 快速操作 -->
-          <div class="side-panel quick-panel">
-            <div class="panel-header">
-              <div class="panel-title">
-                <el-icon :size="22"><Promotion /></el-icon>
-                快速操作
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="quick-grid">
-                <div class="quick-btn" @click="$router.push('/works/register')">
-                  <div class="quick-icon">
-                    <el-icon :size="28"><DocumentAdd /></el-icon>
-                  </div>
-                  <div class="quick-label">版权存证</div>
-                </div>
-                <div class="quick-btn" @click="$router.push('/licenses/grant')">
-                  <div class="quick-icon">
-                    <el-icon :size="28"><Tickets /></el-icon>
-                  </div>
-                  <div class="quick-label">发放授权</div>
-                </div>
-                <div class="quick-btn" @click="$router.push('/licenses/verify')">
-                  <div class="quick-icon">
-                    <el-icon :size="28"><CircleCheck /></el-icon>
-                  </div>
-                  <div class="quick-label">授权核验</div>
-                </div>
-                <div class="quick-btn" @click="$router.push('/works/search')">
-                  <div class="quick-icon">
-                    <el-icon :size="28"><Search /></el-icon>
-                  </div>
-                  <div class="quick-label">作品搜索</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
     </div>
@@ -533,8 +495,8 @@ function getCoverGradient(genre) {
 
 /* 使用提示 */
 .tips-panel {
-  height: 500px;
-  margin-bottom: 30px;
+  flex: 1;
+  min-height: 520px;
 
   .panel-body {
     flex: 1;
@@ -551,6 +513,7 @@ function getCoverGradient(genre) {
 .tip-list {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
   gap: 24px;
   padding: 12px 4px;
   flex: 1;
@@ -573,79 +536,15 @@ function getCoverGradient(genre) {
 }
 
 .tip-step {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--accent-bright);
   letter-spacing: 0.08em;
 }
 
 .tip-text {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* 快速操作 */
-.quick-panel {
-  width: 500px;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-
-  .panel-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .panel-title {
-    font-size: 17px;
-  }
-}
-
-.quick-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 16px;
-  flex: 1;
-  min-height: 0;
-}
-
-.quick-btn {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 18px 20px;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  &:hover {
-    background: #1D2739;
-    border-color: rgba(201, 168, 106, 0.35);
-    transform: translateY(-2px);
-  }
-}
-
-.quick-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  background: var(--accent-soft);
-  border: 1px solid rgba(201, 168, 106, 0.28);
-  color: var(--accent-bright);
-}
-
-.quick-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
+  line-height: 1.7;
 }
 </style>

@@ -105,12 +105,12 @@
             <div class="bottom-grid">
               <div class="mini-panel">
                 <div class="mini-header">
-                  <el-icon :size="20"><Key /></el-icon>
+                  <el-icon :size="26"><Key /></el-icon>
                   最近授权
                 </div>
                 <div v-if="recentLicenses.length" class="mini-list">
                   <div v-for="lic in recentLicenses" :key="lic.licenseID" class="mini-item">
-                    <div class="mini-icon"><el-icon :size="20"><Key /></el-icon></div>
+                    <div class="mini-icon"><el-icon :size="24"><Key /></el-icon></div>
                     <div class="mini-meta">
                       <div class="mini-title">{{ licenseTypeLabel(lic.licenseType) }}</div>
                       <div class="mini-sub">作品 {{ shortID(lic.workID) }}</div>
@@ -124,12 +124,12 @@
 
               <div class="mini-panel">
                 <div class="mini-header">
-                  <el-icon :size="20"><Warning /></el-icon>
+                  <el-icon :size="26"><Warning /></el-icon>
                   最近争议
                 </div>
                 <div v-if="recentDisputes.length" class="mini-list">
                   <div v-for="d in recentDisputes" :key="d.disputeID" class="mini-item">
-                    <div class="mini-icon"><el-icon :size="20"><Warning /></el-icon></div>
+                    <div class="mini-icon"><el-icon :size="24"><Warning /></el-icon></div>
                     <div class="mini-meta">
                       <div class="mini-title">作品 {{ shortID(d.workID) }}</div>
                       <div class="mini-sub">申请人 {{ shortID(d.claimantID) }}</div>
@@ -580,9 +580,12 @@ function getCoverGradient(genre) {
 .mini-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 18px;
+  gap: 12px;
+  /* 与主面板标题(panel-title)同规格，抵消 zoom 缩放的观感差 */
+  font-family: var(--font-body);
+  font-size: 21px;
   font-weight: 700;
+  letter-spacing: 0.03em;
   color: var(--text-primary);
   margin-bottom: 12px;
   flex-shrink: 0;
@@ -605,15 +608,15 @@ function getCoverGradient(genre) {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 10px;
   flex: 1;
-  min-height: 56px;
+  min-height: 72px;
 
   :deep(.el-tag) {
-    font-size: 14px;
+    font-size: 15px;
   }
 }
 
@@ -636,14 +639,14 @@ function getCoverGradient(genre) {
 }
 
 .mini-title {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 4px;
 }
 
 .mini-sub {
-  font-size: 15px;
+  font-size: 18px;
   color: var(--text-light);
   white-space: nowrap;
   overflow: hidden;
@@ -651,7 +654,7 @@ function getCoverGradient(genre) {
 }
 
 .mini-time {
-  font-size: 15px;
+  font-size: 18px;
   color: var(--text-light);
   flex-shrink: 0;
 }

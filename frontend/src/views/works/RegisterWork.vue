@@ -101,13 +101,13 @@
             </div>
             <el-steps direction="vertical" :active="0" class="steps">
               <el-step title="上传文件" description="选择您的原创音频文件" />
-              <el-step title="计算 Hash" description="本地计算 SHA-256 哈希，不上传文件" />
+              <el-step title="计算 Hash" description="计算 SHA-256 指纹（仅哈希上链，文件不存储）" />
               <el-step title="链上存证" description="将哈希写入区块链，生成唯一编号" />
               <el-step title="获取证书" description="可随时下载版权存证证书 PDF" />
             </el-steps>
             <el-alert type="info" :closable="false" show-icon style="margin-top: 16px;">
               <template #title>
-                文件始终在本地处理，仅将哈希值上链，您的作品版权得到严格保护。
+                仅将文件哈希值写入区块链，文件本体不会被存储，您的作品版权得到严格保护。
               </template>
             </el-alert>
           </div>

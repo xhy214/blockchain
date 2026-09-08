@@ -166,6 +166,7 @@ async function handleVerify() {
   }
 
   verifying.value = true
+  result.value = null
   try {
     const fd = new FormData()
     fd.append('workID', form.workID)

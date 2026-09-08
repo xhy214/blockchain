@@ -87,8 +87,8 @@ func (s *LicenseService) RevokeLicense(licenseID, revokerID string) error {
 	return nil
 }
 
-func (s *LicenseService) RecordUsage(licenseID string) error {
-	_, err := s.Fabric.Submit("RecordUsage", licenseID)
+func (s *LicenseService) RecordUsage(licenseID, callerID string) error {
+	_, err := s.Fabric.Submit("RecordUsage", licenseID, callerID)
 	if err != nil {
 		return fmt.Errorf("chaincode RecordUsage: %w", err)
 	}

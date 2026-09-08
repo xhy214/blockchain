@@ -3,6 +3,7 @@ package handler
 import (
 	"strconv"
 
+	"blockchain/backend/model"
 	"blockchain/backend/service"
 	"blockchain/backend/utils"
 
@@ -140,6 +141,11 @@ func (h *CopyrightHandler) Transfer(c *gin.Context) {
 	}
 	if err := c.ShouldBindJSON(&req); err != nil {
 		utils.Error(c, 1001, "参数错误: "+err.Error())
+		return
+	}
+
+	if _, err := model.FindUserByID(req.ToID); err != nil {
+		utils.Error(c, 1002, "接收方用户不存在")
 		return
 	}
 

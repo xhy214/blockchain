@@ -13,8 +13,10 @@ import (
 
 	"github.com/hyperledger/fabric-gateway/pkg/client"
 	"github.com/hyperledger/fabric-gateway/pkg/identity"
+	"github.com/hyperledger/fabric-protos-go-apiv2/gateway"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/status"
 )
 
 type FabricClient struct {
@@ -63,11 +65,41 @@ func NewFabricClient(cfg *config.FabricConfig) (*FabricClient, error) {
 }
 
 func (c *FabricClient) Submit(fn string, args ...string) ([]byte, error) {
-	return c.contract.SubmitTransaction(fn, args...)
+	data, err := c.contract.SubmitTransaction(fn, args...)
+	if err != nil {
+		return data, unwrapChaincodeErr(err)
+	}
+	return data, nil
 }
 
 func (c *FabricClient) Evaluate(fn string, args ...string) ([]byte, error) {
-	return c.contract.EvaluateTransaction(fn, args...)
+	data, err := c.contract.EvaluateTransaction(fn, args...)
+	if err != nil {
+		return data, unwrapChaincodeErr(err)
+	}
+	return data, nil
+}
+
+// Fabric 网关把链码返回的原始错误包在 gRPC status details 里，
+// 不解开的话前端只能看到 "failed to endorse transaction" 这类无用信息
+func unwrapChaincodeErr(err error) error {
+	st, ok := status.FromError(err)
+	if !ok {
+		return err
+	}
+	msg := ""
+	for _, d := range st.Details() {
+		if det, ok := d.(*gateway.ErrorDetail); ok {
+			if msg != "" {
+				msg += "; "
+			}
+			msg += det.GetMessage()
+		}
+	}
+	if msg == "" {
+		return err
+	}
+	return fmt.Errorf("%s", msg)
 }
 
 func (c *FabricClient) Close() {

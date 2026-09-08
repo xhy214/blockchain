@@ -253,6 +253,7 @@ func (c *CopyrightContract) VerifyLicense(ctx contractapi.TransactionContextInte
 	defer iter.Close()
 
 	now := time.Now().UTC()
+	lastReason := ""
 
 	for iter.HasNext() {
 		item, err := iter.Next()
@@ -290,18 +291,24 @@ func (c *CopyrightContract) VerifyLicense(ctx contractapi.TransactionContextInte
 			continue
 		}
 		if now.Before(start) {
-			return &VerifyResult{Valid: false, Reason: "授权尚未生效"}, nil
+			lastReason = "授权尚未生效"
+			continue
 		}
 		if now.After(end) {
-			return &VerifyResult{Valid: false, Reason: "授权已过期"}, nil
+			lastReason = "授权已过期"
+			continue
 		}
 		if lic.MaxUsage > 0 && lic.UsedCount >= lic.MaxUsage {
-			return &VerifyResult{Valid: false, Reason: "使用次数已达上限"}, nil
+			lastReason = "使用次数已达上限"
+			continue
 		}
 
 		return &VerifyResult{Valid: true, License: &lic}, nil
 	}
 
+	if lastReason != "" {
+		return &VerifyResult{Valid: false, Reason: "持有授权但均不可用: " + lastReason}, nil
+	}
 	return &VerifyResult{Valid: false, Reason: "无有效授权"}, nil
 }
 
@@ -369,11 +376,31 @@ func (c *CopyrightContract) RevokeLicense(ctx contractapi.TransactionContextInte
 	return ctx.GetStub().PutState("LICENSE_"+licenseID, data)
 }
 
-func (c *CopyrightContract) RecordUsage(ctx contractapi.TransactionContextInterface, licenseID string) error {
+func (c *CopyrightContract) RecordUsage(ctx contractapi.TransactionContextInterface, licenseID, callerID string) error {
 	lic, err := c.QueryLicense(ctx, licenseID)
 	if err != nil {
 		return err
 	}
+	if lic.LicenseeID != callerID {
+		return fmt.Errorf("permission denied: %s is not the licensee", callerID)
+	}
+
+	now := time.Now().UTC()
+	start, err := time.Parse(time.RFC3339, lic.StartDate)
+	if err != nil {
+		return fmt.Errorf("invalid license start date: %w", err)
+	}
+	end, err := time.Parse(time.RFC3339, lic.EndDate)
+	if err != nil {
+		return fmt.Errorf("invalid license end date: %w", err)
+	}
+	if now.Before(start) {
+		return fmt.Errorf("license not yet effective")
+	}
+	if now.After(end) {
+		return fmt.Errorf("license expired")
+	}
+
 	if lic.Status != "ACTIVE" {
 		return fmt.Errorf("license is not active")
 	}

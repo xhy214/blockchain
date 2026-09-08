@@ -17,3 +17,4 @@ frontend/dist-ssr/
 !.vscode/extensions.json
 .idea
 *.log
+test_fixes.sh

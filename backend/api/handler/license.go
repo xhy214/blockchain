@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"blockchain/backend/model"
 	"blockchain/backend/service"
 	"blockchain/backend/utils"
 
@@ -27,6 +28,11 @@ func (h *LicenseHandler) Grant(c *gin.Context) {
 	}
 
 	grantorID := c.GetString("userID")
+
+	if _, err := model.FindUserByID(req.LicenseeID); err != nil {
+		utils.Error(c, 1002, "被授权用户不存在")
+		return
+	}
 
 	lic, err := h.LicenseSvc.GrantLicense(
 		req.WorkID, grantorID, req.LicenseeID, req.LicenseType,
@@ -91,7 +97,7 @@ func (h *LicenseHandler) RecordUsage(c *gin.Context) {
 		return
 	}
 
-	if err := h.LicenseSvc.RecordUsage(req.LicenseID); err != nil {
+	if err := h.LicenseSvc.RecordUsage(req.LicenseID, c.GetString("userID")); err != nil {
 		utils.Error(c, 3003, "记录使用失败: "+err.Error())
 		return
 	}

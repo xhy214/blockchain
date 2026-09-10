@@ -115,7 +115,7 @@
                       <div class="mini-title">{{ licenseTypeLabel(lic.licenseType) }}</div>
                       <div class="mini-sub">作品 {{ shortID(lic.workID) }}</div>
                     </div>
-                    <el-tag :type="lic.status === 'ACTIVE' ? 'success' : 'info'" size="small" round>{{ licenseStatus(lic.status) }}</el-tag>
+                    <el-tag :type="licenseTagType(lic)" size="small" round>{{ licenseStatus(lic) }}</el-tag>
                     <div class="mini-time">{{ formatDay(lic.endDate) }}</div>
                   </div>
                 </div>
@@ -285,7 +285,9 @@ function formatDay(d) {
 
 function shortID(id) { return id ? String(id).slice(0, 8) : '-' }
 function licenseTypeLabel(t) { return { COMMERCIAL: '商业使用', NON_COMMERCIAL: '非商业使用', EXCLUSIVE: '独家授权' }[t] || t }
-function licenseStatus(s) { return s === 'ACTIVE' ? '有效' : '已撤销' }
+function isExhausted(lic) { return lic.status === 'ACTIVE' && lic.maxUsage > 0 && lic.usedCount >= lic.maxUsage }
+function licenseTagType(lic) { return isExhausted(lic) ? 'warning' : (lic.status === 'ACTIVE' ? 'success' : 'info') }
+function licenseStatus(lic) { return isExhausted(lic) ? '已用完' : (lic.status === 'ACTIVE' ? '有效' : '已撤销') }
 function disputeStatus(s) { return s === 'PENDING' ? '处理中' : '已解决' }
 
 function getCoverGradient(genre) {

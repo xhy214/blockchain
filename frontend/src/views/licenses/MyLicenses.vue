@@ -27,8 +27,8 @@
             </el-table-column>
             <el-table-column prop="status" label="状态" width="100">
               <template #default="{ row }">
-                <el-tag :type="row.status === 'ACTIVE' ? 'success' : 'info'" size="small">
-                  {{ row.status === 'ACTIVE' ? '有效' : '已撤销' }}
+                <el-tag :type="statusTagType(row)" size="small">
+                  {{ statusText(row) }}
                 </el-tag>
               </template>
             </el-table-column>
@@ -48,13 +48,6 @@
                   @click="recordUsage(row)"
                 >
                   记录使用
-                </el-button>
-                <el-button
-                  v-if="row.status === 'ACTIVE'"
-                  link type="danger"
-                  @click="revoke(row)"
-                >
-                  撤销
                 </el-button>
               </template>
             </el-table-column>
@@ -99,23 +92,20 @@ async function recordUsage(lic) {
   } catch (e) { /* handled */ }
 }
 
-async function revoke(lic) {
-  try {
-    await ElMessageBox.confirm(
-      `确定要撤销授权 ${lic.licenseID} 吗？撤销后将无法恢复。`,
-      '撤销授权', { type: 'warning' }
-    )
-  } catch { return }
-
-  try {
-    await api.post('/license/revoke', { licenseID: lic.licenseID })
-    ElMessage.success('授权已撤销')
-    fetchList()
-  } catch (e) { /* handled */ }
-}
-
 function typeLabel(t) {
   return { COMMERCIAL: '商业', NON_COMMERCIAL: '非商业', EXCLUSIVE: '独家' }[t] || t
+}
+
+function isExhausted(lic) {
+  return lic.status === 'ACTIVE' && lic.maxUsage > 0 && lic.usedCount >= lic.maxUsage
+}
+
+function statusTagType(lic) {
+  return isExhausted(lic) ? 'warning' : (lic.status === 'ACTIVE' ? 'success' : 'info')
+}
+
+function statusText(lic) {
+  return isExhausted(lic) ? '已用完' : (lic.status === 'ACTIVE' ? '有效' : '已撤销')
 }
 
 function formatDate(d) {

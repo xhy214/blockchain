@@ -54,6 +54,7 @@ func SetupRouter(cfg *config.Config, fabric *service.FabricClient) *gin.Engine {
 			auth.POST("/license/grant", licenseH.Grant)
 			auth.GET("/license/verify", licenseH.Verify)
 			auth.GET("/license/my", licenseH.My)
+			auth.GET("/license/by-work/:workID", licenseH.ByWork)
 			auth.POST("/license/revoke", licenseH.Revoke)
 			auth.POST("/license/record-usage", licenseH.RecordUsage)
 

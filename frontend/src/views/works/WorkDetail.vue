@@ -109,10 +109,17 @@
                 <div v-if="licenses.length">
                   <div v-for="lic in licenses" :key="lic.licenseID" class="license-item">
                     <div class="license-header">
-                      <el-tag :type="lic.status === 'ACTIVE' ? 'success' : 'info'" size="small">
-                        {{ lic.status === 'ACTIVE' ? '有效' : '已撤销' }}
+                      <el-tag :type="statusTagType(lic)" size="small">
+                        {{ statusText(lic) }}
                       </el-tag>
                       <span class="license-type">{{ licenseTypeLabel(lic.licenseType) }}</span>
+                      <el-button
+                        v-if="isOwner && lic.status === 'ACTIVE'"
+                        link type="danger" size="small"
+                        @click="revokeLic(lic)"
+                      >
+                        撤销
+                      </el-button>
                     </div>
                     <div class="license-detail">
                       <p><strong>被授权人：</strong>{{ lic.licenseeID }}</p>
@@ -142,10 +149,13 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useUserStore } from '@/stores/user'
 import api from '@/api'
 
 const route = useRoute()
+const userStore = useUserStore()
+const isOwner = computed(() => !!work.value && userStore.userInfo?.id === work.value.ownerID)
 const loading = ref(false)
 const loadingLicenses = ref(false)
 const work = ref(null)
@@ -180,10 +190,24 @@ async function fetchHistory() {
 async function fetchLicenses() {
   loadingLicenses.value = true
   try {
-    const all = await api.get('/license/my')
-    licenses.value = (all.data || []).filter(l => l.workID === route.params.workID)
+    const res = await api.get(`/license/by-work/${route.params.workID}`)
+    licenses.value = res.data || []
   } catch (e) { /* ignore */ }
   loadingLicenses.value = false
+}
+
+async function revokeLic(lic) {
+  try {
+    await ElMessageBox.confirm(
+      `确定要撤销授权 ${lic.licenseID} 吗？撤销后将无法恢复。`,
+      '撤销授权', { type: 'warning' }
+    )
+  } catch { return }
+  try {
+    await api.post('/license/revoke', { licenseID: lic.licenseID })
+    ElMessage.success('授权已撤销')
+    fetchLicenses()
+  } catch (e) { /* handled */ }
 }
 
 function statusTagType(s) { return { ACTIVE: 'success', TRANSFERRED: 'info', DISPUTED: 'warning' }[s] || 'info' }
@@ -201,6 +225,15 @@ function typeLabel(t) {
 }
 function licenseTypeLabel(t) {
   return { COMMERCIAL: '商业', NON_COMMERCIAL: '非商业', EXCLUSIVE: '独家' }[t] || t
+}
+function isExhausted(lic) {
+  return lic.status === 'ACTIVE' && lic.maxUsage > 0 && lic.usedCount >= lic.maxUsage
+}
+function statusTagType(lic) {
+  return isExhausted(lic) ? 'warning' : (lic.status === 'ACTIVE' ? 'success' : 'info')
+}
+function statusText(lic) {
+  return isExhausted(lic) ? '已用完' : (lic.status === 'ACTIVE' ? '有效' : '已撤销')
 }
 function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('zh-CN') }
 function copyHash() {

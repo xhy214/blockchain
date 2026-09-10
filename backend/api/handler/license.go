@@ -70,6 +70,15 @@ func (h *LicenseHandler) My(c *gin.Context) {
 	utils.Success(c, licenses)
 }
 
+func (h *LicenseHandler) ByWork(c *gin.Context) {
+	licenses, err := h.LicenseSvc.QueryLicensesByWork(c.Param("workID"))
+	if err != nil {
+		utils.Error(c, 5001, "查询失败: "+err.Error())
+		return
+	}
+	utils.Success(c, licenses)
+}
+
 func (h *LicenseHandler) Revoke(c *gin.Context) {
 	var req struct {
 		LicenseID string `json:"licenseID" binding:"required"`

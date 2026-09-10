@@ -109,8 +109,8 @@
                 <div v-if="licenses.length">
                   <div v-for="lic in licenses" :key="lic.licenseID" class="license-item">
                     <div class="license-header">
-                      <el-tag :type="statusTagType(lic)" size="small">
-                        {{ statusText(lic) }}
+                      <el-tag :type="licenseTagType(lic)" size="small">
+                        {{ licenseStatusText(lic) }}
                       </el-tag>
                       <span class="license-type">{{ licenseTypeLabel(lic.licenseType) }}</span>
                       <el-button
@@ -229,10 +229,10 @@ function licenseTypeLabel(t) {
 function isExhausted(lic) {
   return lic.status === 'ACTIVE' && lic.maxUsage > 0 && lic.usedCount >= lic.maxUsage
 }
-function statusTagType(lic) {
+function licenseTagType(lic) {
   return isExhausted(lic) ? 'warning' : (lic.status === 'ACTIVE' ? 'success' : 'info')
 }
-function statusText(lic) {
+function licenseStatusText(lic) {
   return isExhausted(lic) ? '已用完' : (lic.status === 'ACTIVE' ? '有效' : '已撤销')
 }
 function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('zh-CN') }

@@ -51,15 +51,13 @@
 
                 <el-descriptions :column="2" border>
                   <el-descriptions-item label="作品 ID">
-                    <code>{{ work.workID }}</code>
+                    <CopyField :value="work.workID" />
                   </el-descriptions-item>
                   <el-descriptions-item label="交易 ID">
-                    <code v-if="work.txID">{{ work.txID }}</code>
-                    <span v-else>-</span>
+                    <CopyField :value="work.txID" />
                   </el-descriptions-item>
                   <el-descriptions-item label="SHA-256 哈希" :span="2">
-                    <code class="hash">{{ work.fileHash }}</code>
-                    <el-button link type="primary" size="small" @click="copyHash">复制</el-button>
+                    <CopyField :value="work.fileHash" :length="14" />
                   </el-descriptions-item>
                   <el-descriptions-item label="存证时间" :span="2">{{ formatTime(work.registerAt) }}</el-descriptions-item>
                   <el-descriptions-item label="作品描述" :span="2">
@@ -151,6 +149,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import CopyField from '@/components/CopyField.vue'
 import api from '@/api'
 
 const route = useRoute()
@@ -236,12 +235,6 @@ function licenseStatusText(lic) {
   return isExhausted(lic) ? '已用完' : (lic.status === 'ACTIVE' ? '有效' : '已撤销')
 }
 function formatTime(t) { if (!t) return '-'; return new Date(t).toLocaleString('zh-CN') }
-function copyHash() {
-  if (!work.value) return
-  navigator.clipboard.writeText(work.value.fileHash).then(() => {
-    ElMessage.success('哈希已复制到剪贴板')
-  })
-}
 </script>
 
 <style lang="scss" scoped>
@@ -272,16 +265,6 @@ function copyHash() {
   flex-direction: column;
   gap: 8px;
   flex-shrink: 0;
-}
-
-.hash {
-  font-family: monospace;
-  word-break: break-all;
-  font-size: 14px;
-  background: var(--surface-2);
-  padding: 6px 10px;
-  border-radius: 8px;
-  display: inline-block;
 }
 
 .history-data {

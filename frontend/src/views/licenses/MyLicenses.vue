@@ -15,10 +15,10 @@
         <div class="panel-body">
           <el-table :data="licenses" style="width: 100%" empty-text="暂无授权记录">
             <el-table-column prop="licenseID" label="授权 ID" min-width="140">
-              <template #default="{ row }"><code>{{ row.licenseID }}</code></template>
+              <template #default="{ row }"><CopyField :value="row.licenseID" :length="14" /></template>
             </el-table-column>
             <el-table-column prop="workID" label="作品 ID" min-width="140">
-              <template #default="{ row }"><code>{{ row.workID }}</code></template>
+              <template #default="{ row }"><CopyField :value="row.workID" :length="14" /></template>
             </el-table-column>
             <el-table-column prop="licenseType" label="授权类型" width="120">
               <template #default="{ row }">
@@ -62,6 +62,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import api from '@/api'
+import CopyField from '@/components/CopyField.vue'
 
 const loading = ref(false)
 const licenses = ref([])
